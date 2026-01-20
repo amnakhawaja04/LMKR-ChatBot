@@ -1,3 +1,7 @@
+# Fixed sources
+# careers shows job titles, location and department now fixed
+# employee count not working
+
 import os
 import time
 import warnings
@@ -596,17 +600,92 @@ def fetch_and_clean_body(url: str, depth: int = 0) -> str:
         print(f"Requests fallback failed: {e}")
         return ""
 
+def extract_listing_metadata(soup):
+    """
+    Build a lookup:
+    job_url -> { location, department }
+    Uses BambooHR ATS data-automation-id attributes.
+    """
+    metadata = {}
+
+    for title_el in soup.select("a[data-automation-id='job-title']"):
+        href = title_el.get("href")
+        if not href or not href.startswith("/careers/"):
+            continue
+
+        job_url = "https://lmkr.bamboohr.com" + href
+
+        # Walk up to job card container
+        card = title_el
+        for _ in range(6):
+            if not card:
+                break
+            if card.find("span", {"data-automation-id": "job-location"}) \
+               or card.find("span", {"data-automation-id": "job-department"}):
+                break
+            card = card.parent
+
+        location_el = card.find("span", {"data-automation-id": "job-location"}) if card else None
+        dept_el = card.find("span", {"data-automation-id": "job-department"}) if card else None
+
+        location = location_el.get_text(" ", strip=True) if location_el else None
+        department = dept_el.get_text(" ", strip=True) if dept_el else None
+
+        if location or department:
+            metadata[job_url] = {
+                "location": location,
+                "department": department
+            }
+
+    return metadata
+
+
+def force_scroll(driver, steps=6, pause=1.0):
+    """
+    Scrolls the page to trigger lazy-loaded job metadata.
+    """
+    for i in range(steps):
+        driver.execute_script(
+            "window.scrollTo(0, document.body.scrollHeight);"
+        )
+        time.sleep(pause)
+
+def extract_job_page_metadata(soup):
+    """
+    Extract location and department from a BambooHR job detail page.
+    """
+    location = None
+    department = None
+
+    # Location
+    loc_el = soup.find("div", string=lambda s: s and "Location" in s)
+    if loc_el:
+        val = loc_el.find_next("div")
+        if val:
+            location = val.get_text(" ", strip=True)
+
+    # Department
+    dept_el = soup.find("div", string=lambda s: s and "Department" in s)
+    if dept_el:
+        val = dept_el.find_next("div")
+        if val:
+            department = val.get_text(" ", strip=True)
+
+    return location, department
 
 
 @tool
 def scrape_careers_tool() -> str:
     """
     Scrapes LMKR job openings from BambooHR using ONE Selenium session.
-    Writes ONLY clean job titles to careers_cache.txt
+    Titles are authoritative; metadata is best-effort and non-blocking.
     """
     from selenium import webdriver
     from selenium.webdriver.edge.options import Options
     from selenium.webdriver.edge.service import Service
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
     from bs4 import BeautifulSoup
     import time
 
@@ -622,10 +701,28 @@ def scrape_careers_tool() -> str:
     try:
         # 1️⃣ Load careers listing page
         driver.get(config.careers_url)
-        time.sleep(5)
+        # 🔹 Force scroll to hydrate BambooHR job cards
+        force_scroll(driver, steps=6, pause=1.0)
+
+
+        # ✅ Soft wait — NEVER crash
+        try:
+            WebDriverWait(driver, 15).until(
+                EC.presence_of_element_located(
+                    (By.CSS_SELECTOR, "a[href^='/careers/']")
+                )
+            )
+        except Exception:
+            print("⚠️ Careers page slow to hydrate; continuing.")
 
         soup = BeautifulSoup(driver.page_source, "html.parser")
 
+        # 🔹 Best-effort metadata
+        listing_metadata = extract_listing_metadata(soup)
+        if not listing_metadata:
+            print("ℹ️ No listing metadata found (safe fallback).")
+
+        # 🔹 AUTHORITATIVE job links
         job_links = set()
         for a in soup.select("a[href^='/careers/']"):
             href = a.get("href")
@@ -636,35 +733,41 @@ def scrape_careers_tool() -> str:
 
         jobs = []
 
-        # 2️⃣ Visit each job page IN THE SAME BROWSER
+        # 2️⃣ Visit each job page
         for url in job_links:
             print(f"   ↳ Scraping {url}")
             driver.get(url)
-            time.sleep(3)  # allow JS hydration
+            time.sleep(3)
 
             job_soup = BeautifulSoup(driver.page_source, "html.parser")
 
-            # 🔹 Primary: <h1>
             title_tag = job_soup.select_one("h1")
-
             if title_tag:
                 title_text = title_tag.get_text(strip=True)
             else:
-                # 🔹 Fallback: OpenGraph meta (reliable for BambooHR)
                 meta = job_soup.find("meta", {"property": "og:title"})
                 if meta and meta.get("content"):
                     title_text = meta["content"]
                 else:
-                    continue  # skip if no title found
+                    continue
 
-            if title_text:
-                jobs.append(title_text)
+            location, department = extract_job_page_metadata(job_soup)
 
-        # 3️⃣ Build clean payload (titles ONLY)
+
+            suffix = ""
+            if location and department:
+                suffix = f" - {location} ({department})"
+            elif location:
+                suffix = f" - {location}"
+            elif department:
+                suffix = f" - {department}"
+
+            jobs.append(title_text + suffix)
+
         payload = (
             f"SOURCE: {config.careers_url}\n"
             f"SCRAPED_AT: {datetime.now().isoformat()}\n\n"
-            + "\n".join(dict.fromkeys(jobs))  # dedupe
+            + "\n".join(dict.fromkeys(jobs))
         )
 
         save_to_file(payload, config.careers_output_file)
@@ -672,6 +775,10 @@ def scrape_careers_tool() -> str:
 
     finally:
         driver.quit()
+
+
+
+
 
 
 
@@ -796,9 +903,9 @@ def static_retrieve_node(state: AgentState):
     question = state["question"]
 
     # --------------------------------------------------
-    # SAFE QUERY AUGMENTATION (NO UNBOUND VARIABLES)
+    # SAFE QUERY AUGMENTATION
     # --------------------------------------------------
-    queries = [question]  # ALWAYS defined
+    queries = [question]
 
     if len(question.split()) >= 6:
         aug_prompt = (
@@ -812,7 +919,7 @@ def static_retrieve_node(state: AgentState):
             queries.extend(structured_aug.augmented_queries)
 
     # --------------------------------------------------
-    # VECTOR SEARCH (EMBED ONCE PER QUERY VARIANT)
+    # VECTOR SEARCH
     # --------------------------------------------------
     all_docs = []
 
@@ -827,24 +934,27 @@ def static_retrieve_node(state: AgentState):
         )
 
         for d in docs:
+            if not d.page_content:
+                continue
+
             all_docs.append({
                 "content": d.page_content,
                 "metadata": {
-                    "source": d.metadata.get("source", "unknown.txt"),
-                    "path": d.metadata.get("path", ""),
+                    "source": d.metadata.get("source"),
+                    "path": d.metadata.get("path"),
                     "type": "static_txt"
                 }
             })
 
     # --------------------------------------------------
-    # DEDUP + TOP-K
+    # DEDUPLICATION
     # --------------------------------------------------
     seen = set()
     unique_context = []
 
     for doc in all_docs:
-        content = doc.get("content")
-        if not content or content in seen:
+        content = doc["content"]
+        if content in seen:
             continue
         seen.add(content)
         unique_context.append(doc)
@@ -852,7 +962,13 @@ def static_retrieve_node(state: AgentState):
     unique_context = unique_context[:config.static_k]
 
     # --------------------------------------------------
-    # DEBUG SAVE (OPTIONAL)
+    # SAFETY: NO CONTEXT → NO SOURCES LATER
+    # --------------------------------------------------
+    if not unique_context:
+        return {"context_chunks": []}
+
+    # --------------------------------------------------
+    # DEBUG (OPTIONAL)
     # --------------------------------------------------
     save_to_file(
         "\n---\n".join(d["content"] for d in unique_context),
@@ -860,6 +976,7 @@ def static_retrieve_node(state: AgentState):
     )
 
     return {"context_chunks": unique_context}
+
 
 
 
@@ -1030,31 +1147,48 @@ def _extract_links_from_context(chunks: List[str]) -> List[str]:
 def static_generate_node(state: AgentState):
     print("\nNode: Static Generate...")
 
-    # ----- structured context -----
+    context_chunks = state.get("context_chunks", [])
+
+    # --------------------------------------------------
+    # NO CONTEXT → CLEAN REFUSAL
+    # --------------------------------------------------
+    if not context_chunks:
+        response = GeneratedAnswer(
+            answer="I do not have enough information.",
+            sources_used=[]
+        )
+        append_conversation(state["question"], response.answer)
+        return {"generated_answer": response}
+
+    # --------------------------------------------------
+    # CONTEXT FOR PROMPT (TRIMMED)
+    # --------------------------------------------------
     safe_chunks = trim_context_preserve_accuracy(
-    state.get("context_chunks", []),
-    max_chars=4000
-)
+        context_chunks,
+        max_chars=4000
+    )
 
     context_data = "\n---\n".join(c["content"] for c in safe_chunks)
 
-
+    # --------------------------------------------------
+    # MEMORY (PARALLEL)
+    # --------------------------------------------------
     episodic_future = MEMORY_EXECUTOR.submit(
-    recall_episodes,
-    state["thread_id"],
-    state["question"],
-    2
-)
-
+        recall_episodes,
+        state["thread_id"],
+        state["question"],
+        2
+    )
     conversation_future = MEMORY_EXECUTOR.submit(load_conversation_memory)
 
     episodic_history = episodic_future.result()
     conversation = conversation_future.result()
 
-
-
     today = datetime.now().strftime("%B %d, %Y")
 
+    # --------------------------------------------------
+    # PROMPT
+    # --------------------------------------------------
     prompt = f"""
 You are an expert assistant for LMKR.
 
@@ -1072,35 +1206,54 @@ User Question: {state['question']}
 
 Rules:
 1. Use the Context Data as the primary source of truth.
-2. If the Context Data partially answers the question, provide a concise, factual answer based on it.
-3. Only say "I do not have enough information" if the Context Data is empty or completely irrelevant.
-4. Do NOT invent facts, numbers, dates, or claims not supported by the context.
-5. Return your answer as PLAIN TEXT ONLY. Do NOT use markdown formatting.
-
+2. If the Context Data answers the question, provide a concise factual answer.
+3. Only say "I do not have enough information" if the Context Data does NOT contain the answer.
+4. Do NOT invent facts, numbers, dates, or claims.
+5. Return your answer as PLAIN TEXT ONLY.
 
 Return JSON strictly following the schema.
 """
 
     response = Structured_output(prompt, GeneratedAnswer)
 
-    if response is None:
+    if response is None or not response.answer:
         response = GeneratedAnswer(
             answer="I do not have enough information.",
             sources_used=[]
         )
 
-    # collect sources from metadata
-    sources = []
-    for c in state.get("context_chunks", []):
-        if "source" in c.get("metadata", {}):
-            sources.append(c["metadata"]["source"])
+    # --------------------------------------------------
+    # SOURCE ASSIGNMENT (CORRECT & TRUSTWORTHY)
+    # --------------------------------------------------
+    no_answer_phrases = [
+        "i do not have enough information",
+        "not enough information",
+        "cannot find",
+        "information is not available"
+    ]
 
-    response.sources_used = list(dict.fromkeys(sources))
+    answer_lower = response.answer.lower().strip()
 
-    # ----- persist memories -----
+    if any(p in answer_lower for p in no_answer_phrases):
+        response.sources_used = []
+    else:
+        # 🔑 Attribute from ORIGINAL retrieved chunks, not trimmed ones
+        sources = []
+        for c in context_chunks:
+            src = c.get("metadata", {}).get("source")
+            if src:
+                sources.append(src)
+
+        response.sources_used = list(dict.fromkeys(sources))
+
+    # --------------------------------------------------
+    # PERSIST MEMORY
+    # --------------------------------------------------
     append_conversation(state["question"], response.answer)
 
     return {"generated_answer": response}
+
+
 
 
 def build_dynamic_sources(context_chunks):
