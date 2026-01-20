@@ -1,0 +1,44 @@
+Key LMKR Partnerships and Collaborations:
+
+lmkr partners with a diverse network of global technology, government, and industry leaders to enhance its software and service offerings across energy, public-sector, and fintech domains. Key collaborations include Oracle for cloud infrastructure modernization, LG&HTP and PULSE for GIS-based land and property management systems in Pakistan, and GEPCO for smart power distribution management. In fintech, LMKR works with Mastercard and Bank of Khyber on Pakistan’s first open-loop transit payment system, while partnerships with DeepData, FracGeo, Lumina Geophysical, and Red Buffer integrate advanced geoscience, fracture modeling, AI, and predictive analytics into LMKR’s GVERSE/GeoGraphix platforms. Additionally, collaborations with Halliburton Landmark iEnergy, CWD Inc., USLandGrid, and petroWEB streamline data integration and enterprise workflows. These strategic alliances collectively strengthen LMKR’s capabilities, driving innovation, operational efficiency, and enhanced value for clients worldwide.
+
+Oracle (Cloud Infrastructure Collaboration) – Strategic Tech Partnership:
+In October 2025, LMKR entered a collaboration with Oracle to adopt Oracle Cloud Infrastructure (OCI) for its next-generation digital platforms. This partnership modernizes LMKR’s enterprise systems across sectors (Oil & Gas, Transportation, etc.), leveraging OCI to improve scalability, security, and performance for clients globally.
+
+LG&HTP – Government of Sindh (Service & Technology Partnership):
+LMKR partnered with the Local Government & Housing Town Planning (LG&HTP) Department of Sindh to modernize Karachi’s property tax system. Signed in December 2024 under a World Bank-funded initiative, LMKR is developing a comprehensive GIS-based tax Management Information System to improve transparency and efficiency in urban property tax operations.
+
+PULSE (Punjab Urban Land Systems Enhancement) – Public-Sector Tech Partnership:
+In mid-2024, LMKR signed an agreement with PULSE (a Punjab government program) to build a next-generation Land Record Management Information System (LRMIS). This project will unify all provincial land records (rural to urban) on a centralized platform, using advanced GIS technology to enhance transparency, data accessibility, and governance in land administration.
+
+Gujranwala Electric Power Company (GEPCO) – Technology & Services Partnership:
+In 2024 LMKR partnered with GEPCO to implement a web-based GIS and mobile application for power distribution management. The partnership involves deploying a centralized geospatial system with field data collection and real-time analytics to revolutionize GEPCO’s network management, improving transparency, operational efficiency, and reducing line losses and costs in the electric grid.
+
+Mastercard (with Bank of Khyber) – Strategic FinTech Partnership:
+LMKR joined forces with Mastercard, in collaboration with Pakistan’s Bank of Khyber (BOK), to launch the country’s first open-loop transit payment system. Announced in 2022, this partnership integrates Mastercard’s EMV digital payment technology into public transit (starting with Peshawar’s BRT), enabling commuters to pay fares with credit/debit cards or mobile wallets instead of cash or proprietary cards. The project is a milestone in Pakistan’s transit digitization, fostering a unified digital payment ecosystem for transportation.
+
+DeepData – Exclusive E&P Technology Partnership:
+LMKR and DeepData, a US-based completions software firm, formed a global partnership in 2018 to integrate geoscience data with cloud-based well completion tools. LMKR’s GVERSE/GeoGraphix platform now links with DeepData’s engineered completions solution, allowing LMKR’s rich geological curves to be imported into DeepData’s design tool so geologists and engineers can collaboratively design optimized fracking plans. This co-branded solution enhances well production and lowers costs by combining geology-driven insights with completion engineering workflows.
+
+Red Buffer – AI & R&D Partnership:
+In 2018, LMKR entered a strategic partnership with Red Buffer, a machine learning and data science company, to infuse AI and deep learning into geoscience workflows. The goal of this collaboration is to make advanced geoscience analytics more accessible and affordable. LMKR’s investment in AI/ML—through Red Buffer’s expertise in predictive analytics, recommender systems, and computer vision—accelerates innovation in hydrocarbon exploration, for example by applying machine learning to seismic interpretation and reservoir characterization.
+
+Halliburton Landmark iEnergy Platform – Cloud Integration Partnership:
+LMKR joined Landmark’s iEnergy—Halliburton’s cloud-based E&P platform—as a trusted partner in 2017. Through this collaboration, LMKR’s GVERSE geoscience applications are available as plug-ins on the iEnergy digital ecosystem, enabling seamless integration and fast cloud deployment of LMKR’s tools. This partnership expands LMKR’s reach by plugging its software into a leading industry platform, fostering greater collaboration and digital oilfield capabilities for global users.
+
+FracGeo LLC – Fracture-Modeling Tech Partnership:
+LMKR forged a long-term strategic partnership with FracGeo in 2016 to integrate FracGeo’s advanced fracture geomechanics software with LMKR’s GVERSE and GeoGraphix suites. The companies are co-developing connectors and new computational tools for unconventional reservoir development, combining FracGeo’s proprietary modeling of natural fractures and stresses with LMKR’s geoscience platform. This integration enables more accurate frac design and geomechanical simulation within GeoGraphix, helping clients optimize completions and well spacing in shale reservoirs.
+
+CWD Inc. (Canada) – Data Integration Partnership:
+In 2015, LMKR signed an MoU with CWD Inc., a leading Canadian oil & gas data provider, to bundle CWD’s extensive well and production datasets with LMKR’s GeoGraphix software. Through a Data Distribution Agreement, GeoGraphix now comes preloaded with CWD’s high-quality data for regions like Alberta, BC, and Saskatchewan, greatly reducing the time users spend on finding and loading data. This strategic partnership tailors GeoGraphix for the Canadian market, allowing geoscientists to focus on analysis and interpretation using readily available local datasets.
+
+US Land Grid, Inc. (USLandGrid) – Strategic Investment & Data Partnership:
+LMKR made a strategic investment in USLandGrid in 2015 to integrate on-demand access to USLandGrid’s high-resolution spatial data into GeoGraphix. This partnership provides a direct connection from LMKR’s software to USLandGrid’s nationally sourced land and well data, transforming what was a multi-step data loading process into a one-click operation. By seamlessly streaming trusted GIS vector data (land grids, cultural data, etc.) into GeoGraphix, LMKR enables users to significantly speed up data preparation and be productive in much shorter time frames.
+
+petroWEB – Enterprise Data Management Partnership:
+LMKR entered a strategic partnership with petroWEB in 2014 to connect GeoGraphix with petroWEB’s Enterprise DB, an enterprise E&P data management system based on the PPDM data model. This integration allows geoscientists to seamlessly access corporate well and subsurface data from within GeoGraphix and publish interpreted data back to the central repository, closing the loop between project data and master data stores. By linking the industry-leading interpretation platform with a robust corporate database, the partnership streamlines data workflows and boosts productivity for asset teams working across multiple data domains.
+
+Lumina Geophysical – Strategic Technology Partnership:
+LMKR formed a strategic technology alliance with Lumina Geophysical in 2014 to enhance quantitative seismic interpretation capabilities. Lumina’s unique spectral decomposition and inversion techniques were integrated into LMKR’s product suite, resulting in Predict3D, a tool that generates high-resolution 3D reservoir property volumes from seismic data. This partnership brought advanced science to everyday workflows, enabling more detailed reservoir understanding—especially in thin-bed and shale plays—by extracting more geological information from seismic attributes and improving well planning and field development decisions.
+
+Across all these partnerships—ranging from cloud infrastructure and AI to fintech, GIS, and advanced geophysical tools—LMKR has consistently expanded its capabilities and delivered enhanced value to clients in the petroleum, energy, and public sectors. The company’s diverse partner network reflects its role as both a petroleum software innovator and a broader technology provider addressing industry challenges through combined expertise.

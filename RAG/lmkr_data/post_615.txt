@@ -1,0 +1,6 @@
+TYPE: post
+ID: 615
+Title: LMKR partners with Mastercard to build Pakistan’s first open-loop transit solution
+Date: 2022-08-25T10:41:28
+
+August 25, 2022 LMK Resources Pakistan (Private) Limited (LMKR) has announced partnership with Mastercard to oversee the deployment of the country’s first open-loop transit payment solution. This collaboration will enable commuters to pay transit fares through debit and credit cards or digital wallets, eliminating the need to buy separate tickets. The partnership will see Mastercard’s digital payment platforms embedded first into the Zu Peshawar Bus Rapid Transit (BRT) payments infrastructure, followed by a wider rollout. “We are delighted to partner with Mastercard to upgrade and streamline Pakistan’s current payment infrastructure. Openloop systems make universal payments a reality and bring us one step closer to a unified digital ecosystem. It is a milestone moment in Pakistan’s digitization journey” said Atif Rais Khan, CEO & Chairman, LMKR. Presently, all transit systems in the country have payment options restricted to only cash or closed-loop cards. The convenience of using digital payment will significantly save time and effort for commuters.

@@ -1,0 +1,6 @@
+TYPE: post
+ID: 223
+Title: LMKR announces release of GVERSE Inversion, an enhanced interpretation, reservoir prediction and geosteering solution
+Date: 2017-06-07T16:35:26
+
+June 7, 2017 The latest addition to LMKR GVERSE suite is developed in partnership with FracGeo LLC. GVERSE Inversion is a colored inversion solution that provides a rapid, yet robust way to derive geological details in the form of relative and absolute impedance. When geosteering through a reservoir, the high resolution impedances calculated by the colored inversion ensure that the well is drilled through ideal rock. GVERSE Inversion is completely integrated with the GeoGraphix® suite of products. GVERSE Inversion is the result of strategic partnership with FracGeo LLC aimed at integrating FracGeo’s software solutions and products with LMKR’s GVERSE™ and GeoGraphix® Product suites. The partnership focuses on development of new software technologies and products to help LMKR’s clients adapt their workflows to the new oil price environment.

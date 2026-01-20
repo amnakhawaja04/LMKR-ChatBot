@@ -1,0 +1,6 @@
+TYPE: post
+ID: 273
+Title: LMKR Announces worldwide availability of GVERSE Suite of Plug and Play Geoscience and Engineering applications
+Date: 2015-11-30T08:01:36
+
+November 30, 2015 Designed specifically for users who need fast, on the fly solutions that provide data in real time enabling users to maximize productivity without raising costs. (Dubai) LMKR today announced the worldwide availability of GVERSE suite of Geoscience and Engineering applications. Designed to be inter-operable with other E&P software suites, these applications integrate with the existing environment and cut the time required for interpretations resulting in fast, easy to use scalable tools, covering everything from prospect generation to field development. Featuring leading edge technology, the GVERSE release delivers: GVERSE Connect, a Petrel* plugin for direct data transfer with GeoGraphix GVERSE Attributes for seismic analysis in near real time GVERSE Predict3D, a multi attribute inversion solution powered by Lumina Technology With fast database to database exchange, quick visualization, streamlined workflows, GVERSE offers actionable insight and more control while maximizing the value of your data. Availability GVERSE is available worldwide now. Visit our website for more information.

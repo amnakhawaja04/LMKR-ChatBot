@@ -1,0 +1,1006 @@
+TRVERSE:
+
+Who We Are
+Providing Mobility Solutions To Transform Lives
+In a world that is turning increasingly urban, smart, ethical and sustainable, transport solutions are the need of the hour. This is especially true for emerging economies, which are often not only giant population centers but also have stretched out resources. With our established track record of implementing intelligent transport solutions in the developing world.
+
+We provide holistic mobility solutions for the cities of tomorrow; everything from intelligent transportation systems to station and vehicle security solutions as well as real-time information systems for travelers.
+Our future-ready mobility solutions span logistics, green transport and mass transit sectors. As a division of a veteran technology sector business, LMKR, we leverage our experience and expertise to become the partner of choice for governments and regulators everywhere that are interested in improving the lives of their citizens.
+
+ABOUT LMKR:
+Founded in 1994, LMKR is a diversified technology company that has built a strong portfolio on its strong geoscience and data management footprint.
+
+Over the past 25 years, LMKR has evolved into a premier technology company expanding its reach to Clean Energy, Transportation, Agri-Tech and Digital Media.
+
+With the strong ethos that comes from being a private family business, LMKR with its global operations currently serves fortune 500 companies, SMEs and government regulatory organizations in over 80 countries. The company offers a diverse portfolio of products and services through a combination of online and onsite solutions.
+
+
+Our Mission:
+Mobility Solutions To Improve Lives
+
+Transportation networks and mobility solutions are the backbone of an economy. This is because they provide people access to various opportunities that would otherwise go unveiled. We believe that in our society, mobility solutions truly have the power to change the fortune of communities.
+
+We leverage our experience and expertise to build smart, ethical, and inclusive mobility solutions that help governments improve the lives of their citizens sustainably.
+Though our focus is the core areas of intelligent transportation, integrated security, and information system, we provide all the building blocks needed to create a reliable transportation infrastructure that can help support a community’s economic goals.
+
+We leverage our technical expertise to help our partners build sustainable mobility solutions that increase the capacity of existing infrastructure and extending the lifecycle of their assets.
+
+Our Vision
+Pioneer Smart And Ethical Mobility Solutions
+Our passion for mobility is our driving force along with the belief that only and sustainable transport solutions can provide the reliable underlying structure on which the economies of tomorrow can be built. We aim to be a partner in building a future that is inclusive and viable for coming generations.
+
+We want to lead the way to an autonomous future, to help improve the lives of people through accessible, ethical, and sustainable mobility solutions.
+Through a culture that places a premium on care, trust and excellence, we want to be a global industry leader that champions the implementation of coherent, sustainable, secure, and reliable transportation networks and mobility solutions for everyone.
+
+Through our focus on constant innovation and quality, we want to continue to be the partner of choice for mobility operators, regulators, and governments for the implementation and project execution.
+
+
+Our Expertise:
+
+1. Transport Management
+Providing Mobility Solutions To Transform Lives
+
+(a) Mass Transit
+Better transportation means a better life
+
+Award Winning Solution
+- Automated Fare Collection
+Ticket To A Better Ride
+Fare is a key source of income for any transport company. Our automated fare collection systems make this process of paying and receiving fares significantly simple for both the passenger and the carrier.
+
+Automated fare collection systems are integrated ticketing systems that provide faster transactions, affordable operations, and more efficient collection of payments.
+Our fare collection systems work with a variety of devices for the sale and validation of travel documents, such as virtual and physical tickets and tokens, as well as transport cards.
+
+This solution also works with multiple payment modes, such as mobiles, cards and cash, to automate the payment process and grant customers access to the site.
+
+Benefits of an Automated Fare Collection System
+
+Contactless payment, Mobile wallets, Improved passenger service quality, Controlled flow of funds, Reduced fraud and theft losses, Protection to the protector
+
+How it Works:
+Our automated fare collection system works to collect payment from customers through multiple channels, including mobile wallets, ticket vending machines, and point of sale. This payment, which can be in the form of tokens or virtual, is then inserted into turnstiles or validators installed on board vehicles connected to a data center.
+
+Our system is intuitive and allows the application of a flexible tariff policy and its management in real time for enhanced service quality.
+
+
+
+Hardware:
+Handheld Validator
+Secure Electronic Payment Terminal
+Restaurants
+
+Metro Stations
+
+Hospitals / Pharmacies
+
+Utility Stores
+
+Coffee Shops
+
+Handheld Payment Terminal Overview
+
+Key Features:
+
+Secure electronic payment terminal
+
+5.99” high-resolution screen
+
+High-performance quad-core processor
+
+Seiko thermal printer
+
+Supports payments via:
+
+Magnetic stripe card
+
+IC card
+
+QR code
+
+NFC
+
+Professional scanner for accurate 1D barcode scanning
+
+Dual SIM Dual Standby
+
+Dual PSAM support for versatile scenarios
+
+Handheld and portable
+
+Technical Specifications
+Payment & Card Support
+
+Omni-channel Payments: Magnetic stripe card, IC card, NFC, QR code
+
+IC Card Support:
+
+Smart IC card
+
+Complies with IS7816 / EMV / PBOC 3.0 standards
+
+Magcard Support:
+
+1/2/3 track, bi-directional swipe
+
+Complies with ISO7810 standards
+
+NFC:
+
+PBOC 3.0, ISO/ICE 14443 Type A & B
+
+Mifare card, QPBOC, Paypass, Paywave
+
+Security
+
+ANSI X9.8 / ISO9564
+
+ANSI X9.9 / ISO08731
+
+Master Key / Session Key
+
+Encryption support: 3DES, RSA, SHA-256, SM2, SM3, SM4
+
+SIM & PSAM Slots
+
+Dual SIM card slots: Supports 1.8V / 3.0V
+
+Dual PSAM card slots: Complies with ISO7816
+
+Hardware Specifications
+
+OS: Android 7.1 with SUNMI OS
+
+CPU: Quad-core 1.4 GHz
+
+Memory: 1GB RAM + 8GB ROM (2GB + 16GB optional)
+
+Display: 5.99″ HD+ (1440×720 IPS)
+
+Camera: 5MP with flash, AF; supports 1D/2D barcode scanning
+
+Wi-Fi: 2.4G/5GHz, IEEE 802.11 a/b/g/n
+
+Bluetooth: 2.1 / 3.0 / 4.2, BLE supported
+
+GPS: AGPS & GPS
+
+Scanning & Printing
+
+1D Barcode Recognition: Optional professional hardware scanner
+
+Printer: 58mm high-speed thermal printer (70mm/s), max roll OD 40mm
+
+Battery & Power
+
+Battery: Built-in lithium polymer, 7.6V / 2580mAh
+
+Adaptor: Input AC 100~240V, Output 5V/2A
+
+Connectivity
+
+2G: B3 / B8
+
+3G: WCDMA B1 / B8
+
+4G: B1 / B3 / B7 / B20 / B38 / B40
+
+Other Specifications
+
+Interface: 1× Type-C, USB 2.0 HS OTG support
+
+Sensor: Gravity Sensor (G-sensor)
+
+Speaker: 1W
+
+Keys: Power button (lock screen), functional buttons
+
+Operating Temperature: 0℃~50℃
+
+Storage Temperature: -20℃~60℃
+
+Weight: 430g (including battery)
+
+Dimensions: 224.9 × 84.2 × 17.5(50.4) mm
+
+Summary:
+A versatile handheld payment terminal supporting multiple payment channels, dual SIM & PSAM, high-performance hardware, professional barcode scanning, secure encryption, and portable design suitable for diverse commercial scenarios.
+
+Fare Validator Overview
+
+A secure and efficient fare collection device designed for:
+
+Public Transport Fare Collection
+
+Scenic Spots / Amusement Parks Card Payment
+
+Employee Shuttle / Bus Card Validation
+
+Industrial Parks & Safety School Bus Systems
+
+Balance Inquiry
+
+Key Features:
+
+Streamlined and automatic fare collection
+
+Supports multi-channel payments: magnetic stripe card, IC card, NFC, QR code
+
+Facial recognition and QR code scanning
+
+Standalone or network-connected operation
+
+Real-time alerts for insufficient balance or full memory
+
+Technical Specifications
+Operating System & CPU
+
+OS: Android 7.1 (technical doc mentions Android 5.1 as well, check actual device version)
+
+CPU: Qualcomm eight-core 64-bit ARM Cortex-A53
+
+GPU: Built-in Qualcomm Adreno™ 506 GPU
+
+Memory & Storage
+
+RAM: DDR3 2G
+
+Internal Storage: eMMC 16G (default)
+
+Expandable Storage: TF card up to 64G
+
+Console Data Storage: 2+ million detailed entries
+
+Blacklist Capacity: 200 million entries, extensible
+
+Display & Indicators
+
+LCD Display: 8-inch TFT-LCD, 1280 × 800 resolution
+
+Indicator Light: Red & Green
+
+Camera & Facial Recognition
+
+Camera: Wide-angle / QR / customizable scanning
+
+Facial Recognition: Binocular, wide dynamic face recognition
+
+Default feature library: 20,000 entries
+
+Audio / Voice Prompt
+
+Sound Prompt: Buzzer, single-channel loudspeaker
+
+Voice Prompt: 16kHz, 16-bit single-channel
+
+RFID & Scanning
+
+RFID Standard: ISO-14443 Type A/B
+
+Reading Distance: 0–50mm
+
+Frequency: 13.56 MHz
+
+Supported Cards: MiFare Classic, CPU card types
+
+Barcode Scanning: 1D and 2D codes
+
+Wireless Communication & Connectivity
+
+2G / 3G / 4G wireless modules
+
+Optional: Wi-Fi and Bluetooth
+
+Interfaces: USB-HOST, USB-OTG, RS485, TTL-232, optional HDMI
+
+Positioning (Optional): GPS, Beidou
+
+Power & Environment
+
+Working Voltage: DC 8V–55V
+
+Power Consumption: ≤15 W
+
+Operating Temperature: -25℃ ~ 65℃
+
+Storage Temperature: -40℃ ~ 85℃
+
+Working Humidity: 0–90%
+
+Physical Dimensions
+
+Device Size: 270 × 169 × 72 mm (excluding installation parts)
+
+Housing Material: Engineering plastics
+
+Working Modes
+
+Stand-alone or connected to a server
+
+Alerts for insufficient balance or full data memory
+
+
+POS System Overview
+
+Smart, Customer-Centric POS Solution – ZQ-T8350
+
+The ZQ-T8350 POS System is designed to support facial recognition, RFID card, QR scanning, GPS positioning, and multi-channel wireless communication (4G, Wi-Fi). Ideal for electronic payment or card validation in:
+
+Restaurants
+
+Metro Stations
+
+Hospitals / Pharmacies
+
+Utility Stores
+
+Coffee Shops
+
+Key Features:
+
+Secure electronic payment terminal
+
+Intel® Core i5 processor for high performance
+
+True flat, waterproof touch screen
+
+Cable-friendly interface design (top-side)
+
+Optional dual-screen solution
+
+Stainless steel cash box with RJ-11 interface
+
+RFID contactless technology
+
+Fast barcode scanning support
+
+Technical Specifications
+Operating System & CPU
+
+OS: Windows 7 / Windows 10
+
+CPU: Intel® Core i5 6360U, 2.0GHz (Turbo up to 3.1GHz)
+
+Memory & Storage
+
+Memory: Integrated with CPU specifications
+
+Storage: Not specified; expandable depending on configuration
+
+Display
+
+Primary Touch Screen: 9.7″ TFT
+
+Optional Secondary Display: 15″ TFT
+
+Device Dimensions: 354 × 222 × 340 mm
+
+Power Supply
+
+Single Screen: 12V, 5A
+
+Dual Screen: 12V, 7A
+
+Network & Connectivity
+
+Ethernet: RTL 8111H PCI-E Gigabit NIC
+
+Wireless: 4G, Wi-Fi (optional depending on module)
+
+Cash Box
+
+Model: ZQ-410F
+
+Rated Power: 18 W
+
+Dimensions: 410 × 416 × 100 mm
+
+Material: Metal body, stainless steel
+
+Lock: 3-position key locks
+
+Operating Conditions: -5℃ to 55℃, 5–85% RH
+
+RFID Reader
+
+Model: D8-E
+
+Supported Cards: ISO 14443 Type A & B, MIFARE®, ISO 15693 I-CODE
+
+Interface: PC-linked, 13.56MHz contactless
+
+Scanner
+
+Model: ZQ-S2D16
+
+Dimensions: 170 × 95 × 70 mm
+
+Power Supply: 5V DC, 300 mA
+
+Function: 1D / 2D barcode scanning
+
+POS System Support
+
+Stainless steel cash box
+
+PC-linked RFID reader
+
+Fast barcode reader
+
+Optional dual-screen configuration
+
+Supports omni-channel payments: magnetic stripe card, IC card, NFC, QR code
+
+
+Smart Fare Gates Overview
+
+Controlled, Efficient, and Autonomous Passage Management
+
+Smart fare gates are advanced access control devices designed to manage and secure passageways intelligently. They are upgraded versions of tripod turnstiles and swing barriers, suitable for:
+
+Immigration checkpoints
+
+Metro stations
+
+Amusement parks (card payment)
+
+Utility stores
+
+Visa centers
+
+High-level neighborhoods, intelligent buildings, hotels, ports, and clubs
+
+Key Features:
+
+Integration of mechanics, electronics, microprocessor control, and ID identification
+
+Supports multiple identification methods: IC card, ID card, barcode, fingerprint
+
+Intelligent passage control and security management
+
+Alarm and direction indicator integration
+
+Customizable voice prompts and infrared safety detection
+
+Adjustable normally open/closed gates for diverse applications
+
+Technical Specifications
+Payment & Access
+
+Supports omni-channel payments: magnetic stripe card, IC card, NFC, QR code
+
+Housing & Build
+
+Material: 304# stainless steel
+
+Dimensions: 1500 × 300 × 990 mm (L × W × H)
+
+Retractable Arm Length:
+
+Single wing: 250 mm
+
+Double wing: 425 mm
+
+Passage Width: 550 mm / 900 mm
+
+Direction: Single or bi-directional (optional)
+
+Drive & Control
+
+Motor: DC brushless motor with ARM controller
+
+Opening/Closing Time: 0.6 seconds
+
+Pass Speed:
+
+Open gate: 40 persons/min
+
+Closed gate: 25–30 persons/min
+
+Power ON Time: 3 seconds
+
+Reset Time: 10 seconds
+
+Normal Running Life: 3 million cycles
+
+Safety & Indicators
+
+LED indicator light
+
+Voice prompt function
+
+Infrared logical judgment: 7 or 9 pairs (optional)
+
+Anti-pinch function
+
+Automatic reset functions
+
+Electrical & Communication
+
+Working Voltage: AC 220 ±10% V, 50 ±10% Hz
+
+Communication Interface: RS485 / RS232, distance ≤1200 m
+
+Input Interface: +12V level signal or pulse width >100ms, 12V pulse, drive current >10 mA
+
+Environment
+
+Working Temperature: -10℃ ~ 70℃
+
+Relative Humidity: ≤90%
+
+Indoor or outdoor use, coagulation-free
+
+
+
+
+Ticket Vending Machine (TVM) Overview
+
+Digital Ticketing Solution and Self-Service Accessibility
+
+Model B (ZT2583) is an all-in-one self-service terminal designed for:
+
+Metro Stations
+
+Buildings & Industrial Parks
+
+Banks / ATMs
+
+Amusement Parks (card payment)
+
+Catering, transportation, medical, and government services
+
+Key Features:
+
+ID card verification for secure user authentication
+
+Supports all-channel payment: magnetic stripe card, IC card, NFC, QR code
+
+Fully encrypted hardware (national or international standards)
+
+Reduces human resource costs while improving service quality
+
+Value-added services (e.g., integrated photo printing)
+
+Modular and expandable design for future upgrades
+
+User-friendly, streamlined interface for improved human engineering
+
+24/7 one-stop service
+
+Technical Specifications
+
+Operating System & CPU
+
+OS: Windows 7
+
+CPU: Industrial-grade customized motherboard
+
+Memory & Storage
+
+RAM: 4GB DDR3
+
+Storage: 128GB SSD, console storage of 2+ million records, extensible
+
+Blacklist Capacity: 200 million, extensible
+
+Touch Display & LCD
+
+Primary Touch Display: 19-inch TFT LCD, 32-bit true color, 1280 × 1024
+
+Additional LCD Display: 8-inch TFT-LCD, 1280 × 800 (indicator light: red & green)
+
+Explosion-Proof Monitor: Industrial-grade motherboard
+
+Camera & Facial Recognition
+
+Camera: Wide-angle / QR / customized scanning
+
+Facial Recognition: Binocular, wide-dynamic recognition camera
+
+Feature library capacity: 20,000
+
+Audio / Voice Prompt
+
+Sound Prompt: Buzzer, single-channel loudspeaker
+
+Voice Prompt: 16kHz, 16-bit single-channel
+
+Power & Environment
+
+Working Voltage: DC 8V–55V
+
+Power Consumption: ≤15 W
+
+Operating Temperature: -25℃ ~ 65℃
+
+Storage Temperature: -40℃ ~ 85℃
+
+Humidity: 0–90%
+
+RFID & Scanning
+
+RFID Standard: ISO-14443 Type A/B
+
+Reading Distance: 0–50mm
+
+Frequency: 13.56 MHz
+
+Supported Cards: MiFare Classic, CPU card type
+
+Scanning: 1D and 2D barcode supported
+
+Communication & Connectivity
+
+USB-HOST, USB-OTG, RS485, TTL-232 (optional)
+
+Display interface: HDMI (optional)
+
+Wireless: 2G, 3G, 4G, USB collection (Wi-Fi and Bluetooth optional)
+
+Positioning: GPS, Beidou (optional)
+
+Working Mode
+
+Stand-alone or connected to server
+
+Warnings for insufficient balance or full memory
+
+TVM Functional Modules
+
+Card Reader
+
+Card Dispenser
+
+Metal EPP (encrypted pin pad)
+
+ID Card Reader
+
+Invoice Printer
+
+Camera
+
+Thermal Printer
+
+Cash Detector
+
+Barcode Scanner
+
+Human Sensor
+
+Intelligent Transport System
+Achieving Traffic Efficiency Through Innovation
+
+In any city, mobility is a key concern; be it going to school, office, or any other purpose. Citizens use the transport system to travel within the city. Leveraging citizens with an Intelligent Transport Management System can save their time and make the city even smarter.
+
+Intelligent Transport System (ITS) aims to achieve traffic efficiency by minimizing traffic problems. It enriches users with prior information about traffic, local convenience, real-time running information, seat availability, etc., which reduces travel time of commuters as well as enhances their safety and comfort.
+
+Scheduling System
+On Time, Always
+
+Scheduling is a critical component of mass transit systems, ensuring efficiency, reliability, and timely service. It enables transit operators to plan resources accurately, manage vehicles and drivers, and coordinate all moving parts of the system.
+
+Benefits of Scheduling:
+
+Efficient fleet management
+
+Improved passenger service quality
+
+Cost savings through optimized resource allocation
+
+Responsiveness to changes in external conditions
+
+More reliable transport system
+
+How it Works:
+
+Timetable Generation: A complete timetable is generated, detailing all services.
+
+Vehicle Scheduling: Vehicles are allocated based on requirements such as peak/off-peak periods.
+
+Driver Scheduling: Drivers are scheduled considering work hours, lunch breaks, total shift time, and labor regulations.
+
+Resource Optimization: All calculations ensure optimal deployment of vehicles and drivers.
+
+Outcome: The result is a seamless timetable that ensures smooth service for both operators and passengers.
+
+Dispatching System
+Smooth Operations, All in Real-Time
+
+The dispatch system ensures timely vehicle release and continuous monitoring of transit operations. It is essential for:
+
+Maintaining schedules
+
+Managing vehicle flow and intervals
+
+Monitoring departures and arrivals
+
+Recording activities across all routes
+
+How it Works:
+
+Real-Time Monitoring: Dispatch systems gather live data on vehicle location and status.
+
+Route Display & Status Updates: Routes and their operational status are displayed in real-time.
+
+Driver Communication: Supports communication with drivers onboard.
+
+Operational Control: By integrating software and hardware components, dispatch systems implement strategies to maintain smooth operations.
+
+Outcome: Ensures a seamless journey for passengers from the first mile to the last mile.
+
+
+Signal Priority System (TSP)
+
+Improve Your Transit Reliability
+
+Transit Signal Priority (TSP) systems optimize traffic flow for public transport vehicles, reducing delays and improving schedule adherence.
+
+Benefits:
+
+Eliminates unnecessary delays
+
+Improved fuel efficiency
+
+Increased people throughput
+
+Reduces congestion
+
+Improved travel time
+
+Enhanced traffic system reliability
+
+How it Works:
+
+Transit vehicles send a signal to the traffic signal controller.
+
+The controller adjusts traffic signal timing based on:
+
+Vehicle presence and predicted arrival time
+
+Traffic flow and coordination
+
+Bus schedule adherence and prior bus arrivals
+
+Outcome: smoother traffic flow and prioritized public transport movement
+
+Information Management System (IMS)
+
+Better Transportation, Better Life
+
+The IMS integrates multiple passenger communication and infotainment systems to improve service quality, operational efficiency, and passenger satisfaction.
+
+Public Address (PA) System
+
+Get Your Message Across
+
+PA systems deliver voice announcements to passengers at stops and in vehicles, ensuring critical information is clear, intelligible, and audible above ambient noise.
+
+How it Works:
+
+Components include microphones, amplifiers, and loudspeakers.
+
+A mixing console or powered mixer ensures uniform sound coverage and adequate levels.
+
+Essential for security, safety, and emergency messaging.
+
+Infotainment System
+
+Bridge the Revenue Gap
+
+Infotainment systems enhance the passenger experience while creating new revenue streams via advertising.
+
+Benefits:
+
+Additional revenue through targeted advertising
+
+Improved passenger experience
+
+Provides travel and local information
+
+Entertainment for commuters
+
+Hyper-local advertising opportunities
+
+How it Works:
+
+HD digital displays deliver multimedia content to passengers.
+
+Content includes real-time travel information, weather, news, ads, social media, and security camera feeds.
+
+Location-based targeting allows dynamic content delivery onboard.
+
+Passenger Information System (PIS)
+
+Get Your Message Across in Real-Time
+
+PIS provides timely, accurate passenger information, improving satisfaction and operational efficiency.
+
+Benefits:
+
+Improved passenger service quality
+
+Increased commuter satisfaction and ridership
+
+Prompt response to emergencies
+
+Smoother operations
+
+How it Works:
+
+Media data is input from a remote operator station.
+
+Displays include:
+
+Digital signage on platforms
+
+In-vehicle screens
+
+Passenger kiosks
+
+Mobile apps via cloud server integration
+
+Updates cover: fares, routes, arrivals, departures, and emergency notices
+
+
+Access Control System
+
+Limit Your Exposure
+
+Access control systems streamline, monitor, and log the movement of people within a controlled area, helping organizations protect resources, data, and personnel.
+
+Benefits of Access Control:
+
+Protect processes, data, and ensure business continuity
+
+Attendance recording for staff and visitors
+
+Electronic logs for incident review and auditing
+
+Accountability of personnel entering/exiting premises
+
+Seamless integration with existing network and fault monitoring systems
+
+Adaptive to changing organizational needs
+
+Enhanced protection for security personnel
+
+How it Works:
+
+Credential-Based Access:
+
+Entry is granted based on established credentials:
+
+Key cards
+
+Key fobs
+
+Biometric identifiers (fingerprints, facial recognition, etc.)
+
+Network Integration:
+
+Door readers connect to a centralized network.
+
+Each credential is tied to a user profile to authorize access.
+
+Monitoring & Alerts:
+
+Software tracks entries and exits in real-time.
+
+Security supervisors or business owners are alerted to:
+
+After-hours access
+
+Unauthorized entry attempts
+
+Any suspicious activity
+
+
+Video Analytics System
+
+Increase Your Efficiency
+
+Traditional surveillance relies on human operators, which can be inefficient and inconsistent. Video analytics make IP camera systems intelligent, reducing workload and increasing security effectiveness.
+
+Benefits:
+
+After-hours motion detection
+
+Facial recognition
+
+License plate reading
+
+People counting to prevent overcrowding
+
+Recognizing suspicious behavior
+
+Loss prevention
+
+Traffic violations detection
+
+Easy-to-use interface
+
+How it Works:
+
+Systems are configured to detect specific suspicious behaviors (e.g., loitering, unauthorized access).
+
+Facial recognition can identify individuals according to pre-set parameters.
+
+Alerts are generated automatically when unusual activity is detected.
+
+Video Monitoring System
+
+Watch and Protect
+
+Video monitoring ensures safety in public transport systems, including stations and vehicles, by deterring crime and providing reliable evidence if incidents occur.
+
+Benefits:
+
+Lower operational costs
+
+Offense archiving and photographic documentation
+
+Threat deterrence
+
+High-resolution imagery
+
+Requires less equipment
+
+How it Works:
+
+IP cameras record, compress, and stream video to a central control room.
+
+Security personnel monitor wide-angle videos to detect anomalies.
+
+Systems are built to withstand mechanical shocks and vibrations, suitable for transport environments.
+
+Logistics Management
+
+A Single Window for Smooth Movement of Goods
+
+Modern logistics relies on technology to enhance efficiency, transparency, and safety in supply chains and transport operations.
+
+Benefits:
+
+Increased operational efficiency
+
+Transparent tracking across the supply chain
+
+Reduced errors and improved accuracy
+
+Better inventory control
+
+Higher customer and vendor satisfaction
+
+How it Works:
+
+Integrates Supply Chain, Freight Forwarding, and Road Transport expertise
+
+Provides real-time responsiveness, platform transparency, and effective communication
+
+Uses technology to improve warehouse management, shipment tracking, and overall supply chain visibility
+
+Green Transport
+
+Safe, Smart, and Sustainable
+
+Green transport focuses on reducing environmental impact while improving efficiency and safety in urban and logistics networks.
+
+Benefits:
+
+More efficient transport operations
+
+Environmentally friendly, reducing pollution and carbon footprint
+
+Reduced noise pollution
+
+Better inventory control
+
+Safer cities for pedestrians
+
+How it Works:
+
+Incorporates technology to optimize mass transit networks
+
+Connects communities with sustainable, low-emission transportation options
+
+Promotes economic, environmental, and social sustainability

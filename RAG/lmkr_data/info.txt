@@ -1,0 +1,37 @@
+Company: LMKR  
+Founded: 1994  
+Type: Private, global provider of geo-technology and information technology services to businesses and governments.  
+Headquarters / Global presence: Regional offices internationally (including Dubai, Malaysia, USA) and a technology services center in Islamabad, Pakistan (among other locations).  
+
+Presence in Pakistan / Islamabad:  
+LMKR (LMK Resources Pakistan Pvt Ltd) maintains an office at: 9th Floor, No. 55-C, PTET/Ufone Tower, Jinnah Avenue, Blue Area, Islamabad, Postal Code 44000.  
+ICT-arm LMKT (Pvt) Ltd — part of the LMKR group — also lists its Islamabad address as: 9th Floor, Plot 55-C, Ufone Tower, Jinnah Avenue, Blue Area, Islamabad.  
+
+Founder / Key Leadership:  
+Atif Rais Khan — Chairman & CEO (also co-founder of LMKT)  
+
+Related Entities / Sub-brands under LMKR group:
+
+LMKT (Pvt) Ltd.  
+- Originally the ICT/IT division of LMKR; incubated as a full-service ICT company in 2011.  
+- Provides scalable ICT solutions and services across industries beyond energy (e.g. smart cities, governance, agri-tech, clean tech).  
+- Service offerings include smart cities, smart buildings, integrated security management, geospatial/GIS services, big-data services, application development, managed services, e-governance solutions, clean-technology solutions, and tech-incubation / startup support.  
+
+TRVERSE  
+- Brand / division under LMKR focused on mobility and urban transportation solutions (intelligent transportation systems, mass transit systems, real-time information systems, station/vehicle security, and other urban-mobility infrastructure services).  
+- Through TRVERSE, LMKR delivers integrated mobility solutions including logistics infrastructure, mass transit infrastructure, digital ticket/payment systems, ITS deployments, and transit-system operation and maintenance.  
+- As part of TRVERSE-led projects, LMKR has collaborated with international payment providers to build open-loop transit payment solutions, enabling commuters to pay transit fares via debit/credit cards or digital wallets rather than separate transit-cards.  
+
+LMKR Services & Expertise:  
+- Geo-Technology / Geoscience & E&P services: geological, geophysical and petrophysical interpretation; structural modeling; reservoir & field planning; 3D visualization; data processing and interpretation services for upstream energy-sector clients.  
+- Data management, information management and software support services: transforming complex oil-field and exploration data into actionable, secure, structured information; data integration; enterprise software; consulting services.  
+- ICT, urban-tech and digital services (through LMKT): smart-city solutions; building automation and security; GIS and big-data services; clean-technology and agri-tech solutions; enterprise software; e-governance solutions; startup incubation / support.  
+- Urban mobility and mass-transit systems (through TRVERSE): planning, implementing, and managing intelligent transit systems; fare/payment systems; real-time transit information; security & surveillance systems; operations and maintenance for public-transport projects.  
+
+Notable Projects / Initiatives:  
+- Deployment of a mass-transit system (BRT or similar) along with transit-control, ITS and smart ticketing in a city (via TRVERSE), supporting daily ridership and digital ticketing acceptance.  
+- Implementation of an open-loop transit payment solution in partnership with a global payment services provider — enabling modern, card- or wallet-based fare payments instead of cash or closed-loop transit-cards.  
+- Provision of GIS-based and enterprise solutions for urban property-tax management, land/property data management, or other e-governance / public-sector data systems for government clients.  
+
+Summary:  
+LMKR is a diversified global technology company originally focused on geo-technology and petroleum-related IT / E&P services. Over time, under the leadership of Atif Rais Khan, the group expanded and restructured to include LMKT (a general-purpose ICT / technology services company) and TRVERSE (a brand focused on urban mobility and transport systems). Collectively, the group offers a wide array of services: geoscience and E&P support, IT and data services, smart-city and urban infrastructure solutions, transit and mobility systems, and startup incubation / support — serving private enterprises and public-sector clients worldwide, including a confirmed presence in Pakistan (Islamabad).

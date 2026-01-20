@@ -1,0 +1,6 @@
+TYPE: post
+ID: 221
+Title: LMKR + iEnergy &#8211; Collaborating on Landmark’s digital network on the cloud
+Date: 2017-08-22T16:31:58
+
+August 22, 2017 LMKR is excited to announce its presence on the iEnergy platform, the industry’s foremost E&P community. As a trusted partner, LMKR’s applications will serve as plug-ins enabling seamless integration and fast deployment. iEnergy creates value for all members; Collaboration and big data, along with digital renovation, are of strategic value in today’s energy business, and E&P companies are fast becoming part of this revolution. LMKR GVERSE is a fully integrated cloud-based geoscience and engineering suite with flexible pricing, consisting of geoscience and engineering solutions focused on workflow optimization and enhancing productivity of teams working on diverse geological and geophysical projects. iEnergy offers the perfect platform for showcasing the integration capabilities of GVERSE and GeoGraphix.

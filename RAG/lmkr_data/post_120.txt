@@ -1,0 +1,6 @@
+TYPE: post
+ID: 120
+Title: LMKR enters into a strategic partnership with Red Buffer for AI and Deep Learning
+Date: 2018-06-04T07:30:07
+
+June 4, 2018 LMKR partners with Red Buffer to provide continuous innovation. With the aim of making advanced geoscience affordable as well as easy to access, the partnership will have LMKR investing in AI and deep learning in hydrocarbon exploration. “We believe machine learning is the next frontier for innovation. Our collaboration with a leading data science firm that specializes in recommended systems and predictive analytics will help us build on our innovative approach to R&D tremendously.” Asim Ghaffar, VP R&D at LMKR “ We truly believe Machine Learning is the next frontier for innovation. And very excited to be partnering with LMKR and take on interesting technical challenges pushing us to innovate while also expanding our footprint in the energy sector. “ Tayyab Tariq, CEO Red Buffer About Red Buffer RedBuffer is a Machine Learning services company that has helps organizations in financial, legal, telecommunication, clean energy and food industry to augment and improve their products through applied machine & deep learning, natural language processing and computer vision. http://redbuffer.net

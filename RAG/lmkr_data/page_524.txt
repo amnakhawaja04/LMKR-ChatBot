@@ -1,0 +1,6 @@
+TYPE: page
+ID: 524
+Title: About LMKR
+Date: 2023-02-01T20:01:26
+
+Founded in 1994, LMKR is a technology company with an extensive solutions portfolio that includes reservoir-centric interpretation, smart urbanization, agri-tech, big data services, AI-driven technology solutions, and consulting. From geoscience exploration solutions to intelligent transportation, we have delivered successful projects for organizations of all sizes across diverse industries globally. We are committed to delivering innovative technology solutions and services to our clients, and strive to explore new ways for businesses to use technology for different purposes. Our solutions combine a deep understanding of the current technology landscape with a proven methodology to ensure successful deployment, integration, and scalability.

@@ -1,0 +1,6 @@
+TYPE: post
+ID: 639
+Title: Announcing the release of GVERSE GeoGraphix 2022.1 – a milestone in the evolution of GeoGraphix software.
+Date: 2022-10-27T06:12:04
+
+October 27, 2022: We are pleased to announce the release of GVERSE GeoGraphix 2022.1.  Our 2022 release is the culmination of eighteen months of R&D effort and includes over thirty new features that help our customers explore for and produce hydrocarbons.  Some of the release highlights include: A completely revamped GVERSE cross section package that combines our industry-leading cross section software with twenty new features, including many centered-on workflows specific to horizontal drilling New image georeferencing and grid statistics tools in GIS and mapping Digitization of raster logs in GVERSE DepthRegistration Displaying complex log templates in GVERSE Geophysics New Python SDK for accessing GeoGraphix database data and integrating AI processes into exploration workflows With something for everyone, GVERSE GeoGraphix 2022.1 is a milestone in the evolution of GeoGraphix software and demonstrates our commitment to providing geoscientists with the software they need to get the job done – all day, every day.

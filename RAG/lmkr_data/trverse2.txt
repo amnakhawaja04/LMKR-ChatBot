@@ -1,0 +1,201 @@
+Client Story: Peshawar BRT
+
+Helping Our Clients Shape an Intelligent Transport System
+
+Overview
+
+Peshawar, a major center of trade and commerce, has a population of 2.2 million with limited public transportation infrastructure. To address this, the Khyber Pakhtunkhwa (KP) government launched a cost-efficient, sustainable mass transit system to transform urban mobility.
+
+LMKR, in collaboration with its partners, designed and deployed an intelligent transport system, launched in 2020, serving:
+
+220K+ daily ridership (2021)
+
+158 buses across 9 routes
+
+60K+ mobile app downloads
+
+50M+ total passengers
+
+114M km distance traveled
+
+1M+ Zu cards sold
+
+Challenge
+
+Peshawar’s population grows at 3.2% annually, putting immense pressure on the city’s aging transport infrastructure.
+
+Public transport was fragmented, with poorly maintained vehicles and chaotic traffic patterns.
+
+Existing modes (Mazda, Hiace, Suzuki vans) were insufficient for large segments of the population, particularly women and children.
+
+Solution
+
+The KP Government, with support from the Asian Development Bank, launched the Bus Rapid Transit (BRT) Project. LMKR provided system control equipment and services to deliver:
+
+Affordable, reliable, and customer-friendly transport
+
+Urban regeneration and infrastructure development
+
+27-km dedicated busway corridor with 30 stations and 60 km of direct services
+
+Key Components:
+
+Provision, installation, testing, and commissioning of equipment and software
+
+Operation, maintenance, and capacity-building training
+
+Full management of system control equipment during the contract period
+
+Benefits
+Easy Accessibility
+
+Facilitates 120,000+ commuters daily
+
+Reduces travel time from 2 hours to 45 minutes across the city
+
+Improves access to medical care, employment, and community resources
+
+First-Class Facilities
+
+Modern waiting facilities and e-ticketing
+
+Real-time bus schedule information
+
+Cashless, contactless fare collection ensuring transparency and reducing theft
+
+Automated Fare Collection
+
+Hassle-free, accurate, and secure fare verification
+
+Benefits operators, government, and commuters
+
+Scheduling and Dispatching
+
+Efficient fleet management ensures buses run on time, even during peak hours
+
+Real-time tracking of bus location and vehicle status ensures seamless end-to-end passenger journeys
+
+Zu Mobile App
+
+Digital ticketing and mobile wallet for a cashless, contactless journey
+
+Provides route maps, fare details, and real-time travel information
+
+Integrated Security
+
+Multi-layered video analytics and monitoring system
+
+24/7 access control and security surveillance
+
+Priority facilities for women, elderly, and people with disabilities
+
+100% step-free universal accessibility with separate waiting areas and ticket counters
+
+Sustainability & Green Transport
+
+Expected 31,000-ton-equivalent reduction in carbon footprint per year
+
+Bicycle-sharing system with 30 stations, 300 bicycles, and zero emissions for last-mile connectivity
+
+Impact
+
+The Peshawar BRT system, branded Zu, is a world-class public transport solution that:
+
+Transforms mobility for residents
+
+Enhances safety, convenience, and accessibility
+
+Promotes sustainable, environmentally friendly transport
+
+Strengthens economic activity across the city
+
+
+Lahore Metro
+
+Ensuring Optimum Services and Security of Commuters
+
+Overview
+
+The Punjab Mass Transit Authority (PMA) was tasked with creating and maintaining a safe, efficient, and comfortable urban transportation system for the people of Lahore. To tackle this challenge, the Government of Pakistan partnered with LMKR to ensure that the feeder routes of the metro bus projects in Lahore operate at optimal levels. The LMKR-provided security solution aims to provide commuters with a secure and hassle-free journey.
+
+The centrally controlled video surveillance system not only safeguards passengers but also enables quick restoration of traffic in case of emergencies or service breakdowns.
+
+Key Stats:
+
+180K+ Daily Ridership
+
+200 Total Buses
+
+27 Total Routes
+
+28.5 KM Distance Travelled
+
+17 Feeder Routes
+
+Challenge
+
+With a population exceeding 11 million, growing at 3.5% annually, Lahore is the second largest city in Pakistan. Historically, public transport in Lahore was unsafe, fragmented, underdeveloped, and inefficient. Residents preferred private vehicles, worsening traffic congestion, accidents, harassment, and road-related issues.
+
+Many public transport vehicles operated without valid licenses, overfilled passengers, and offered little comfort or security. This led to an increase in private vehicle ownership, placing further strain on the city’s roads and deteriorating the quality of life. Lahore needed a public transport system capable of attracting commuters back to buses.
+
+Solution
+
+The PMA partnered with LMKR to provide, maintain, and operate an integrated solution covering security, communication networks, network monitoring, KPI monitoring, and helpdesk support for the Lahore Metrobus feeder routes.
+
+The solution provides commuters with a secure, hassle-free journey, while monitoring bus operator performance to ensure the required operational standards are met. The system safeguards passengers, centralizes monitoring of bus operations and infrastructure, and ensures rapid traffic restoration in emergencies or service disruptions.
+
+Multan Metro
+
+Ensuring Optimum Services and Security of Commuters
+
+Overview
+
+The Punjab Mass Transit Authority (PMA) was established for the planning, construction, operation, and maintenance of mass transit systems in major cities of Punjab. The department aims to increase access to public transit while reducing pollution and traffic congestion.
+
+To maintain a safe and comfortable urban transport system in Multan, the Government of Pakistan partnered with LMKR to start the Metro Bus Service, providing a secure and hassle-free environment for commuters. The centrally controlled video surveillance system captures all angles in and around buses, enhancing onboard safety and enabling quick restoration of traffic in emergencies.
+
+Key Stats:
+
+100K+ Daily Ridership
+
+135 Total Buses
+
+21 Stations
+
+18.5 KM Corridor Length
+
+560 Cameras
+
+14 Feeder Routes
+
+Challenge
+
+Multan, the fifth largest city in Punjab, has seen its population grow from 1.1 million in 1998 to over 2 million in 2021, with projections of 2.5% annual growth over the next decade. As a major cultural and economic center of Southern Punjab, Multan experiences significant commuting traffic.
+
+Historically, public transport relied on Mazda, Toyota Hiace, Suzuki vans, and rickshaws, with no organized bus service. Minibuses offered substandard service, prompting commuters to rely on private vehicles. This led to traffic congestion, accidents, and deterioration of the road network, negatively impacting the overall quality of life.
+
+Solution
+
+To address this, PMA partnered with LMKR to provide, operate, and maintain an integrated solution covering security, communication networks, network monitoring, KPI monitoring, and helpdesk services for Metro Bus Multan.
+
+The solution ensures a secure and hassle-free journey for commuters, monitors bus operator performance, centralizes operations, and enables rapid traffic restoration during emergencies or breakdowns. It safeguards passengers while ensuring smooth and efficient transit operations throughout the network.
+
+
+TRVERSE OFFICES:
+1. United States
+LMK Resources Inc.
+
+6051 North Course Drive, Suite 300,
+Houston, TX 77072, USA
+Phone: +1.281.495.5657
+Fax: +1.281.568.7315
+
+2. United Arab Emirates
+LMKR Corporate Headquarters
+
+Office No 512, 5th floor, CNPC Building 1,
+Emaar Business Park, Sheikh Zayed Road,
+Dubai, UAE.
+Phone: +971 4 3209565
+Fax: +971 4 2394099
+Email: office@lmkr.com

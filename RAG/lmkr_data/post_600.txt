@@ -1,0 +1,6 @@
+TYPE: post
+ID: 600
+Title: Annual Technical Conference &amp; Oil Show
+Date: 2023-01-11T11:01:01
+
+We had a great time exhibiting at SPE & PAPG’s Annual Technical Conference & Oil Show, which included technical presentations, demos, and panel discussions. The Upstream Oil and Gas Industry of Pakistan hosts the ATC, an exciting technical event that showcases the most recent technologies, ideas, and processes for the sector. Our team demonstrated LMKR’s data management solutions as well as how using machine learning, artificial intelligence, and programming languages such as Python can improve the overall geoscience exploration lifecycle. Atif Rais Khan, CEO and Group Chairman, participated in a panel discussion and shared his insights on oil and gas self-sufficiency through exploration and production revitalization. LMKR’s presence at ATC allowed for invaluable client interaction with seasoned senior geoscientists as well as recent graduates new to the industry, and we are already looking forward to the next one!

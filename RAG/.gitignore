@@ -1,0 +1,15 @@
+.venv11
+__pycache__
+
+announcement_faiss
+career_faiss
+announcements_cache.txt
+careers_cache.txt
+context_debug.txt
+demo_ver.zip
+conversation_memory.json
+episodic_memory.json
+livekit_agent.py
+RAG (2).zip
+working.zip
+integrated.zip

@@ -1,0 +1,6 @@
+TYPE: post
+ID: 358
+Title: Houston User Group Meeting
+Date: 2013-12-05T17:42:00
+
+December 5, 2013 LMKR joined 50 Houston-based clients representing over 20 oil companies Thursday, December 5th, 2013 for a Holiday Lunch and User Group at Hughes Hangar in Houston. In an effort to showcase the new functionalities of the GGX 2014 release, Fred Poland, Product Manager GeoGraphix, introduced multiple GeoGraphix 2014 features to attendees. Topics included Streamlining Workflows for Unconventional Plays, Integrating Geophysics and Geology for Optimal Geomodeling and Field Planning In Minutes. Participants were thrilled to learn more about the upcoming GeoGraphix 2014 release. The event was a tremendous success, as it allowed LMKR to interact with valuable clients from leading oil companies in the Houston area.

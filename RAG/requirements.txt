@@ -1,0 +1,15 @@
+flask 
+numpy 
+faiss-cpu 
+requests 
+beautifulsoup4 
+openai 
+pydantic 
+langchain-community 
+langchain-openai 
+langchain-core 
+langchain-text-splitters 
+langgraph 
+guardrails-ai 
+python-dotenv 
+selenium
