@@ -94,7 +94,7 @@ class config:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
     LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "800"))
-    LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.0"))
+    LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.2"))
 
     # Embeddings
     EMBEDDINGS_MODEL = os.getenv("EMBEDDINGS_MODEL", "text-embedding-3-small")
@@ -103,12 +103,12 @@ class config:
     # Vector DB (ABSOLUTE PATHS – REQUIRED)
     faiss_path = os.getenv(
         "faiss_path",
-        r"C:\Users\afarooq\Downloads\lmkr-company-website (2)\lmkr-company-website\RAG\faiss_data"
+        r"C:\Users\afarooq\Downloads\lmkr-company-website\website\RAG\faiss_data"
     )
 
     data_path = os.getenv(
         "data_path",
-        r"C:\Users\afarooq\Downloads\lmkr-company-website (2)\lmkr-company-website\RAG\lmkr_data"
+        r"C:\Users\afarooq\Downloads\lmkr-company-website\website\RAG\lmkr_data"
     )
 
     static_output = os.getenv("static_output", "context_debug.txt")
@@ -132,7 +132,7 @@ class config:
     careers_output_file = os.getenv("careers_output_file", "careers_cache.txt")
     announcement_output_file = os.getenv("announcement_output_file", "announcements_cache.txt")
 
-    scrape_after = int(os.getenv("scrape_after", "3"))
+    scrape_after = int(os.getenv("scrape_after", "24"))
     scrape_timeout = int(os.getenv("scrape_timeout", "20"))
 
     # Selenium
@@ -441,9 +441,9 @@ class RouteDecision(BaseModel):
     ] = Field(
         description=(
             "Choose 'announcements_retrieve_node' for announcements, press releases, or latest updates about LMKR. "
-            "Choose 'career_retrieve_node' for jobs/vacancies,hiring,careers. "
-            "Choose direct_node for greetings, small talk, or general world-knowledge questions that are not specific to LMKR. "
-            "Choose static_retrieve_node ONLY if the question is about LMKR, its products, platforms, services, or company information.\n"
+            "Choose 'career_retrieve_node' for jobs/vacancies. "
+            "Choose 'direct_node' for greetings/small talk unrelated to LMKR. "
+            "Choose 'static_retrieve_node' for everything else."
         )
     )
 
@@ -493,16 +493,45 @@ def Structured_output(prompt_text: str, response_model: Type[T]) -> Optional[T]:
 
 def extract_bamboohr_job_links(html: str) -> List[str]:
     soup = BeautifulSoup(html, "html.parser")
-    links = []
+    links = set()
 
-    for a in soup.find_all("a", href=True):
-        href = a["href"]
-        if "/careers/" in href:
-            if href.startswith("/"):
-                href = "https://lmkr.bamboohr.com" + href
-            links.append(href)
+    for a in soup.select("a[href^='/careers/']"):
+        href = a.get("href")
+        if href and href.split("/")[-1].isdigit():
+            links.add("https://lmkr.bamboohr.com" + href)
 
-    return list(set(links))
+    return list(links)
+
+
+
+def extract_job_title(html: str) -> Optional[str]:
+    soup = BeautifulSoup(html, "html.parser")
+    h1 = soup.find("h1")
+    return h1.get_text(strip=True) if h1 else None
+
+
+
+
+def fetch_html_selenium(url: str) -> str:
+    from selenium import webdriver
+    from selenium.webdriver.edge.options import Options
+    from selenium.webdriver.edge.service import Service
+    import time
+
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--disable-gpu")
+    options.add_argument(f"--user-agent={config.web_user_agent}")
+
+    driver = webdriver.Edge(options=options, service=Service())
+    try:
+        driver.get(url)
+        time.sleep(5)  # enough for BambooHR
+        return driver.page_source
+    finally:
+        driver.quit()
+
+
 
 def _bs4_extract_clean_text(html: str) -> str:
     soup = BeautifulSoup(html, "html.parser")
@@ -572,33 +601,109 @@ def fetch_and_clean_body(url: str, depth: int = 0) -> str:
 @tool
 def scrape_careers_tool() -> str:
     """
-    Scrapes LMKR careers AND individual job descriptions.
+    Scrapes LMKR job openings from BambooHR using ONE Selenium session.
+    Writes ONLY clean job titles to careers_cache.txt
     """
-    print("Crawling BambooHR careers site...")
+    from selenium import webdriver
+    from selenium.webdriver.edge.options import Options
+    from selenium.webdriver.edge.service import Service
+    from bs4 import BeautifulSoup
+    import time
 
-    listing_html = fetch_and_clean_body(config.careers_url)
-    job_links = extract_bamboohr_job_links(listing_html)
+    print("🕷️ Selenium scraping LMKR BambooHR careers (single session)...")
 
-    print(f"Found {len(job_links)} job pages")
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--disable-gpu")
+    options.add_argument(f"--user-agent={config.web_user_agent}")
 
-    all_jobs_text = []
+    driver = webdriver.Edge(options=options, service=Service())
 
-    for url in job_links:
-        print(f"   ↳ Scraping job: {url}")
-        job_html = fetch_and_clean_body(url)
-        if job_html:
-            all_jobs_text.append(
-                f"SOURCE: {url}\n\n{job_html}"
-            )
+    try:
+        # 1️⃣ Load careers listing page
+        driver.get(config.careers_url)
+        time.sleep(5)
 
-    payload = (
-        f"SOURCE: {config.careers_url}\n"
-        f"SCRAPED_AT: {datetime.now().isoformat()}\n\n"
-        + "\n\n---\n\n".join(all_jobs_text)
-    )
+        soup = BeautifulSoup(driver.page_source, "html.parser")
 
-    save_to_file(payload, config.careers_output_file)
-    return payload
+        job_links = set()
+        for a in soup.select("a[href^='/careers/']"):
+            href = a.get("href")
+            if href and href.split("/")[-1].isdigit():
+                job_links.add("https://lmkr.bamboohr.com" + href)
+
+        print(f"✅ Found {len(job_links)} job pages")
+
+        jobs = []
+
+        # 2️⃣ Visit each job page IN THE SAME BROWSER
+        for url in job_links:
+            print(f"   ↳ Scraping {url}")
+            driver.get(url)
+            time.sleep(3)  # allow JS hydration
+
+            job_soup = BeautifulSoup(driver.page_source, "html.parser")
+
+            # 🔹 Primary: <h1>
+            title_tag = job_soup.select_one("h1")
+
+            if title_tag:
+                title_text = title_tag.get_text(strip=True)
+            else:
+                # 🔹 Fallback: OpenGraph meta (reliable for BambooHR)
+                meta = job_soup.find("meta", {"property": "og:title"})
+                if meta and meta.get("content"):
+                    title_text = meta["content"]
+                else:
+                    continue  # skip if no title found
+
+            if title_text:
+                jobs.append(title_text)
+
+        # 3️⃣ Build clean payload (titles ONLY)
+        payload = (
+            f"SOURCE: {config.careers_url}\n"
+            f"SCRAPED_AT: {datetime.now().isoformat()}\n\n"
+            + "\n".join(dict.fromkeys(jobs))  # dedupe
+        )
+
+        save_to_file(payload, config.careers_output_file)
+        return payload
+
+    finally:
+        driver.quit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def is_list_jobs_query(question: str) -> bool:
+    q = question.lower()
+    return any(phrase in q for phrase in [
+        "what jobs are available",
+        "list jobs",
+        "job openings",
+        "open positions",
+        "current openings",
+        "available positions",
+        "careers"
+    ])
+
+
+
 
 
 
@@ -721,8 +826,6 @@ def static_retrieve_node(state: AgentState):
             k=config.static_k
         )
 
-        
-
         for d in docs:
             all_docs.append({
                 "content": d.page_content,
@@ -765,42 +868,68 @@ def career_retrieve_node(state: AgentState):
     print("\nNode: Career Retrieve...")
     question = state["question"]
 
+    # --------------------------------------------------
+    # Load cache OR scrape
+    # --------------------------------------------------
     if is_file_fresh(config.careers_output_file, SCRAPE_FRESH_HOURS):
-
         raw_text = load_from_file(config.careers_output_file)
     else:
         raw_text = scrape_careers_tool.invoke({})
 
-
     if not raw_text:
-        return {"context_chunks": []}
+        return {
+            "generated_answer": GeneratedAnswer(
+                answer="No job openings found.",
+                sources_used=[config.careers_url]
+            ),
+            "__end__": True
+        }
 
-    chunks = split_text_into_chunks(raw_text)
+    # --------------------------------------------------
+    # ⚡ FAST-PATH: LIST JOBS (NO LLM, NO FAISS)
+    # --------------------------------------------------
+    if is_list_jobs_query(question):
+        print("⚡ Fast-path: listing jobs directly (NO LLM)")
 
-    career_vs = load_or_build_faiss(
-    config.career_faiss_path,
-    chunks,
-    embeddings
-)
+        jobs = []
+        for line in raw_text.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith("SOURCE") or line.startswith("SCRAPED_AT"):
+                continue
+            jobs.append(line)
 
-    retrieved_docs = career_vs.similarity_search(
-        question,
-        k=config.careers_k
-    )
+        jobs = list(dict.fromkeys(jobs))  # dedupe
 
+        answer_text = (
+            "\n".join(jobs)
+            if jobs
+            else "No job openings found."
+        )
+
+        return {
+            "generated_answer": GeneratedAnswer(
+                answer=answer_text,
+                sources_used=[config.careers_url]
+            ),
+            "__end__": True
+        }
+
+    # --------------------------------------------------
+    # Fallback (non-list career queries)
+    # --------------------------------------------------
     return {
-        "context_chunks": [
-            {
-                "content": d.page_content,
-                "metadata": {
-                    "source_url": config.careers_url,
-                    "source_file": config.careers_output_file,
-                    "source_type": "career_scrape"
-                }
-            }
-            for d in retrieved_docs
-        ]
+        "generated_answer": GeneratedAnswer(
+            answer="Please specify what you would like to know about LMKR careers.",
+            sources_used=[config.careers_url]
+        ),
+        "__end__": True
     }
+
+
+
+
 
 
 
@@ -848,67 +977,36 @@ def announcements_retrieve_node(state: AgentState):
     }
 
 
-def is_small_talk(question: str) -> bool:
-    q = question.lower().strip()
-
-    small_talk_phrases = [
-        "hi", "hello", "hey",
-        "how are you",
-        "how's it going",
-        "good morning",
-        "good afternoon",
-        "good evening",
-        "thank you",
-        "thanks",
-        "bye",
-        "goodbye"
-    ]
-
-    # exact or starts-with match (prevents false positives)
-    return any(
-        q == p or q.startswith(p + " ")
-        for p in small_talk_phrases
-    )
-
 
 def direct_node(state: AgentState):
-    print("\nNode: Direct...")
+    print("\nNode: Direct (LLM)...")
 
     question = state["question"]
 
-    # ✅ Allow greetings / small talk
-    if is_small_talk(question):
-        response = Structured_output(
-            f"""
+    prompt = f"""
 User Input: {question}
-You are a polite corporate assistant for LMKR.
-Respond briefly and naturally.
-Return plain text only.
-""",
-            GeneratedAnswer
-        )
+Instructions:
+1. You are a helpful corporate assistant for LMKR.
+2. Respond naturally to the greeting or conversational question.
+3. Do NOT make up technical facts. Just be polite.
+4. Return your answer as PLAIN TEXT ONLY. Do NOT use markdown formatting (no ###, **, *, -, lists, code blocks, etc.). Use simple, readable text.
+Return a short helpful reply.
+"""
 
-        if not response:
-            response = GeneratedAnswer(answer="Hello! How can I help you with LMKR today?", sources_used=[])
+    response = Structured_output(prompt, GeneratedAnswer)
 
-        return {
-            **state,
-            "generated_answer": response,
-            "context_chunks": [],
-            "destination": "direct_node",
-        }
+    if not response:
+        response = GeneratedAnswer(answer="Hello! How can I help?", sources_used=["Direct"])
+    else:
+        response.sources_used = ["Direct"]
 
-    # ❌ Block general knowledge / definitions
+    # ✅ pass-through state
     return {
         **state,
-        "generated_answer": GeneratedAnswer(
-            answer="Sorry, I can only help with questions about LMKR, its products, and its services.",
-            sources_used=[]
-        ),
+        "generated_answer": response,
         "context_chunks": [],
         "destination": "direct_node",
     }
-
 
 
 
@@ -973,16 +1071,11 @@ Current Date: {today}
 User Question: {state['question']}
 
 Rules:
-1. You MUST answer ONLY using the provided Context Data.
-2. You are FORBIDDEN from using general knowledge.
-3. If the answer is not explicitly stated in the Context Data,
-   respond exactly with:
-   "Sorry, I do not have enough information. Feel free to ask me more about LMKR!"
-
-4. If the Context Data partially answers the question, provide a concise, factual answer based on it.
-5. Only say "Sorry, I do not have enough information. Feel free to ask me more about LMKR!" if the Context Data is empty or completely irrelevant.
-6. Do NOT invent facts, numbers, dates, or claims not supported by the context.
-7. Return your answer as PLAIN TEXT ONLY. Do NOT use markdown formatting.
+1. Use the Context Data as the primary source of truth.
+2. If the Context Data partially answers the question, provide a concise, factual answer based on it.
+3. Only say "I do not have enough information" if the Context Data is empty or completely irrelevant.
+4. Do NOT invent facts, numbers, dates, or claims not supported by the context.
+5. Return your answer as PLAIN TEXT ONLY. Do NOT use markdown formatting.
 
 
 Return JSON strictly following the schema.
@@ -992,7 +1085,7 @@ Return JSON strictly following the schema.
 
     if response is None:
         response = GeneratedAnswer(
-            answer="Sorry, I do not have enough information. Feel free to ask me more about LMKR!",
+            answer="I do not have enough information.",
             sources_used=[]
         )
 
@@ -1150,7 +1243,7 @@ Return JSON strictly following the schema.
 
     if response is None:
         response = GeneratedAnswer(
-            answer="Sorry, I do not have enough information. Feel free to ask me more about LMKR!",
+            answer="I do not have enough information.",
             sources_used=[]
         )
 
@@ -1232,8 +1325,9 @@ workflow.add_conditional_edges(
 
 # retrieval -> generator
 workflow.add_edge("static_retrieve_node", "static_generate_node")
-workflow.add_edge("career_retrieve_node", "dynamic_generate_node")
+# workflow.add_edge("career_retrieve_node", "dynamic_generate_node")
 workflow.add_edge("announcements_retrieve_node", "dynamic_generate_node")
+
 
 # generators -> safety -> groundness
 workflow.add_edge("static_generate_node", "output_guard_node")
