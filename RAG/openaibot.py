@@ -87,7 +87,7 @@ def embed_once(text: str):
         print(f"⚠️ Embedding failed, skipping query: {e}")
         return None
 
-SCRAPE_FRESH_HOURS = 3
+SCRAPE_FRESH_HOURS = 24
 
 # =========================================================
 # CONFIG (inline)
@@ -673,6 +673,35 @@ def extract_job_page_metadata(soup):
 
     return location, department
 
+def parse_career_lines(raw_text: str):
+    jobs = []
+
+    for line in raw_text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("SOURCE") or line.startswith("SCRAPED_AT"):
+            continue
+
+        title = line
+        location = None
+        department = None
+
+        if " - " in line:
+            title, rest = line.split(" - ", 1)
+
+            if "(" in rest and rest.endswith(")"):
+                location, dept = rest.rsplit("(", 1)
+                location = location.strip()
+                department = dept.rstrip(")").strip()
+            else:
+                location = rest.strip()
+
+        jobs.append({
+            "title": title.strip(),
+            "location": location,
+            "department": department
+        })
+
+    return jobs
 
 @tool
 def scrape_careers_tool() -> str:
@@ -965,7 +994,10 @@ def static_retrieve_node(state: AgentState):
     # SAFETY: NO CONTEXT → NO SOURCES LATER
     # --------------------------------------------------
     if not unique_context:
-        return {"context_chunks": []}
+        return {
+        **state,
+        "context_chunks": []
+    }
 
     # --------------------------------------------------
     # DEBUG (OPTIONAL)
@@ -1003,7 +1035,7 @@ def career_retrieve_node(state: AgentState):
         }
 
     # --------------------------------------------------
-    # ⚡ FAST-PATH: LIST JOBS (NO LLM, NO FAISS)
+    # ⚡ FAST-PATH: LIST ALL JOBS (NO LLM)
     # --------------------------------------------------
     if is_list_jobs_query(question):
         print("⚡ Fast-path: listing jobs directly (NO LLM)")
@@ -1030,19 +1062,74 @@ def career_retrieve_node(state: AgentState):
                 answer=answer_text,
                 sources_used=[config.careers_url]
             ),
+            "destination": "__end__"
+        }
+
+    # --------------------------------------------------
+    # 🔍 STRUCTURED CONTEXT FOR FILTERED / SEMANTIC QUERIES
+    # --------------------------------------------------
+    def parse_career_lines(raw_text: str):
+        parsed = []
+
+        for line in raw_text.splitlines():
+            line = line.strip()
+            if not line or line.startswith("SOURCE") or line.startswith("SCRAPED_AT"):
+                continue
+
+            title = line
+            location = None
+            department = None
+
+            if " - " in line:
+                title, rest = line.split(" - ", 1)
+
+                if "(" in rest and rest.endswith(")"):
+                    loc, dept = rest.rsplit("(", 1)
+                    location = loc.strip()
+                    department = dept.rstrip(")").strip()
+                else:
+                    location = rest.strip()
+
+            parsed.append({
+                "title": title.strip(),
+                "location": location,
+                "department": department
+            })
+
+        return parsed
+
+    jobs = parse_career_lines(raw_text)
+
+    context_chunks = []
+    for job in jobs:
+        context_chunks.append({
+            "content": (
+                f"Job Title: {job['title']}\n"
+                f"Location: {job['location'] or 'Not specified'}\n"
+                f"Department: {job['department'] or 'Not specified'}"
+            ),
+            "metadata": {
+                "source_url": config.careers_url,
+                "source_type": "career_scrape"
+            }
+        })
+
+    if not context_chunks:
+        return {
+            "generated_answer": GeneratedAnswer(
+                answer="No job openings found.",
+                sources_used=[config.careers_url]
+            ),
             "__end__": True
         }
 
     # --------------------------------------------------
-    # Fallback (non-list career queries)
+    # 🚀 LET THE GENERATOR REASON & FILTER
     # --------------------------------------------------
     return {
-        "generated_answer": GeneratedAnswer(
-            answer="Please specify what you would like to know about LMKR careers.",
-            sources_used=[config.careers_url]
-        ),
-        "__end__": True
+        "context_chunks": context_chunks
     }
+
 
 
 
@@ -1277,6 +1364,10 @@ def build_dynamic_sources(context_chunks):
 def dynamic_generate_node(state: AgentState):
     print("\nNode: Dynamic Generate...")
 
+    if not state.get("context_chunks"):
+        return state
+
+
     # --------------------------------------------------
     # CONTEXT (trimmed for safety + speed)
     # --------------------------------------------------
@@ -1478,7 +1569,7 @@ workflow.add_conditional_edges(
 
 # retrieval -> generator
 workflow.add_edge("static_retrieve_node", "static_generate_node")
-# workflow.add_edge("career_retrieve_node", "dynamic_generate_node")
+workflow.add_edge("career_retrieve_node", "dynamic_generate_node")
 workflow.add_edge("announcements_retrieve_node", "dynamic_generate_node")
 
 
