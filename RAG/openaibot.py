@@ -1,3 +1,7 @@
+# Fixed sources
+# careers shows job titles, location and department now fixed
+# employee count not working
+
 import os
 import time
 import warnings
@@ -83,7 +87,7 @@ def embed_once(text: str):
         print(f"⚠️ Embedding failed, skipping query: {e}")
         return None
 
-SCRAPE_FRESH_HOURS = 3
+SCRAPE_FRESH_HOURS = 24
 
 # =========================================================
 # CONFIG (inline)
@@ -94,7 +98,7 @@ class config:
     OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
     LLM_MODEL = os.getenv("LLM_MODEL", "gpt-4o-mini")
     LLM_MAX_TOKENS = int(os.getenv("LLM_MAX_TOKENS", "800"))
-    LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.0"))
+    LLM_TEMPERATURE = float(os.getenv("LLM_TEMPERATURE", "0.2"))
 
     # Embeddings
     EMBEDDINGS_MODEL = os.getenv("EMBEDDINGS_MODEL", "text-embedding-3-small")
@@ -103,12 +107,12 @@ class config:
     # Vector DB (ABSOLUTE PATHS – REQUIRED)
     faiss_path = os.getenv(
         "faiss_path",
-        r"C:\Users\afarooq\Downloads\lmkr-company-website (2)\lmkr-company-website\RAG\faiss_data"
+        r"C:\Users\afarooq\Downloads\lmkr-company-website\website\RAG\faiss_data"
     )
 
     data_path = os.getenv(
         "data_path",
-        r"C:\Users\afarooq\Downloads\lmkr-company-website (2)\lmkr-company-website\RAG\lmkr_data"
+        r"C:\Users\afarooq\Downloads\lmkr-company-website\website\RAG\lmkr_data"
     )
 
     static_output = os.getenv("static_output", "context_debug.txt")
@@ -132,7 +136,7 @@ class config:
     careers_output_file = os.getenv("careers_output_file", "careers_cache.txt")
     announcement_output_file = os.getenv("announcement_output_file", "announcements_cache.txt")
 
-    scrape_after = int(os.getenv("scrape_after", "3"))
+    scrape_after = int(os.getenv("scrape_after", "24"))
     scrape_timeout = int(os.getenv("scrape_timeout", "20"))
 
     # Selenium
@@ -200,8 +204,8 @@ def is_file_fresh(path: str, hours: int) -> bool:
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=600,
-    chunk_overlap=120
+    chunk_size=800,
+    chunk_overlap=150
 )
 
 def split_text_into_chunks(text: str) -> List[str]:
@@ -239,13 +243,15 @@ memory_store = InMemoryStore(
 
 
 # =========================================================
-# VECTORSTORE BOOTSTRAP (PERSISTENT FAISS)
+# VECTORSTORE BOOTSTRAP (PERSISTENT FAISS) — FIXED
 # =========================================================
 
 vectorstore = None
 documents = []
 
-# 1️⃣ Try loading existing FAISS
+# ---------------------------------------------------------
+# 1️⃣ Try loading existing FAISS (dimension-safe)
+# ---------------------------------------------------------
 if os.path.exists(config.faiss_path):
     try:
         vectorstore = LC_FAISS.load_local(
@@ -253,17 +259,35 @@ if os.path.exists(config.faiss_path):
             embeddings,
             allow_dangerous_deserialization=True
         )
-        print("FAISS index loaded from disk.")
+
+        # 🔍 Dimension sanity check (CRITICAL)
+        test_vec = embeddings.embed_query("dimension check")
+        faiss_dim = vectorstore.index.d
+        embed_dim = len(test_vec)
+
+        if faiss_dim != embed_dim:
+            print(
+                f"⚠️ FAISS dim mismatch (faiss={faiss_dim}, embed={embed_dim}) "
+                "→ forcing rebuild"
+            )
+            vectorstore = None
+        else:
+            print("✅ FAISS index loaded successfully.")
+
     except Exception as e:
-        print(f"Failed to load FAISS index: {e}")
+        print(f"⚠️ Failed to load FAISS index: {e}")
+        vectorstore = None
 
-# 2️⃣ If not found or failed → build & persist
+
+# ---------------------------------------------------------
+# 2️⃣ Build FAISS if missing or invalid
+# ---------------------------------------------------------
 if vectorstore is None:
-    print("No FAISS index found. Creating a new one...")
+    print("🔄 Building FAISS index from static documents...")
 
-    documents = []  # ✅ re-initialize safely
-
-    # 🔹 Ingest real documents
+    # -----------------------------------------------------
+    # Load raw static documents
+    # -----------------------------------------------------
     if os.path.exists(config.data_path):
         for fname in os.listdir(config.data_path):
             if fname.lower().endswith(".txt"):
@@ -271,18 +295,21 @@ if vectorstore is None:
                 with open(full_path, encoding="utf-8", errors="ignore") as f:
                     content = f.read()
 
-                documents.append(
-                    Document(
-                        page_content=content,
-                        metadata={
-                            "source": fname,              # filename
-                            "path": full_path,
-                            "source_type": "static_txt"
-                        }
+                if content.strip():
+                    documents.append(
+                        Document(
+                            page_content=content,
+                            metadata={
+                                "source": fname,
+                                "path": full_path,
+                                "source_type": "static_txt"
+                            }
+                        )
                     )
-                )
 
-    # 🔹 Absolute fallback (never empty)
+    # -----------------------------------------------------
+    # Absolute fallback (never allow empty FAISS)
+    # -----------------------------------------------------
     if not documents:
         documents.append(
             Document(
@@ -294,10 +321,34 @@ if vectorstore is None:
             )
         )
 
-    # 🔹 Build + persist FAISS
-    vectorstore = LC_FAISS.from_documents(documents, embeddings)
+    # -----------------------------------------------------
+    # 🔹 CHUNK DOCUMENTS BEFORE EMBEDDING (CRITICAL FIX)
+    # -----------------------------------------------------
+    chunked_documents = []
+
+    for doc in documents:
+        chunks = split_text_into_chunks(doc.page_content)
+        for idx, chunk in enumerate(chunks):
+            chunked_documents.append(
+                Document(
+                    page_content=chunk,
+                    metadata={
+                        **doc.metadata,
+                        "chunk_id": idx
+                    }
+                )
+            )
+
+    print(f"📄 Loaded {len(documents)} files → {len(chunked_documents)} chunks")
+
+    # -----------------------------------------------------
+    # Build & persist FAISS
+    # -----------------------------------------------------
+    vectorstore = LC_FAISS.from_documents(chunked_documents, embeddings)
     vectorstore.save_local(config.faiss_path)
-    print("FAISS index created and saved to disk.")
+
+    print("✅ FAISS index built and saved to disk.")
+
 
 
 
@@ -441,9 +492,9 @@ class RouteDecision(BaseModel):
     ] = Field(
         description=(
             "Choose 'announcements_retrieve_node' for announcements, press releases, or latest updates about LMKR. "
-            "Choose 'career_retrieve_node' for jobs/vacancies,hiring,careers. "
-            "Choose direct_node for greetings, small talk, or general world-knowledge questions that are not specific to LMKR. "
-            "Choose static_retrieve_node ONLY if the question is about LMKR, its products, platforms, services, or company information.\n"
+            "Choose 'career_retrieve_node' for jobs/vacancies. "
+            "Choose 'direct_node' for greetings/small talk unrelated to LMKR. "
+            "Choose 'static_retrieve_node' for everything else."
         )
     )
 
@@ -493,16 +544,45 @@ def Structured_output(prompt_text: str, response_model: Type[T]) -> Optional[T]:
 
 def extract_bamboohr_job_links(html: str) -> List[str]:
     soup = BeautifulSoup(html, "html.parser")
-    links = []
+    links = set()
 
-    for a in soup.find_all("a", href=True):
-        href = a["href"]
-        if "/careers/" in href:
-            if href.startswith("/"):
-                href = "https://lmkr.bamboohr.com" + href
-            links.append(href)
+    for a in soup.select("a[href^='/careers/']"):
+        href = a.get("href")
+        if href and href.split("/")[-1].isdigit():
+            links.add("https://lmkr.bamboohr.com" + href)
 
-    return list(set(links))
+    return list(links)
+
+
+
+def extract_job_title(html: str) -> Optional[str]:
+    soup = BeautifulSoup(html, "html.parser")
+    h1 = soup.find("h1")
+    return h1.get_text(strip=True) if h1 else None
+
+
+
+
+def fetch_html_selenium(url: str) -> str:
+    from selenium import webdriver
+    from selenium.webdriver.edge.options import Options
+    from selenium.webdriver.edge.service import Service
+    import time
+
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--disable-gpu")
+    options.add_argument(f"--user-agent={config.web_user_agent}")
+
+    driver = webdriver.Edge(options=options, service=Service())
+    try:
+        driver.get(url)
+        time.sleep(5)  # enough for BambooHR
+        return driver.page_source
+    finally:
+        driver.quit()
+
+
 
 def _bs4_extract_clean_text(html: str) -> str:
     soup = BeautifulSoup(html, "html.parser")
@@ -567,38 +647,246 @@ def fetch_and_clean_body(url: str, depth: int = 0) -> str:
         print(f"Requests fallback failed: {e}")
         return ""
 
+def extract_listing_metadata(soup):
+    """
+    Build a lookup:
+    job_url -> { location, department }
+    Uses BambooHR ATS data-automation-id attributes.
+    """
+    metadata = {}
 
+    for title_el in soup.select("a[data-automation-id='job-title']"):
+        href = title_el.get("href")
+        if not href or not href.startswith("/careers/"):
+            continue
+
+        job_url = "https://lmkr.bamboohr.com" + href
+
+        # Walk up to job card container
+        card = title_el
+        for _ in range(6):
+            if not card:
+                break
+            if card.find("span", {"data-automation-id": "job-location"}) \
+               or card.find("span", {"data-automation-id": "job-department"}):
+                break
+            card = card.parent
+
+        location_el = card.find("span", {"data-automation-id": "job-location"}) if card else None
+        dept_el = card.find("span", {"data-automation-id": "job-department"}) if card else None
+
+        location = location_el.get_text(" ", strip=True) if location_el else None
+        department = dept_el.get_text(" ", strip=True) if dept_el else None
+
+        if location or department:
+            metadata[job_url] = {
+                "location": location,
+                "department": department
+            }
+
+    return metadata
+
+
+def force_scroll(driver, steps=6, pause=1.0):
+    """
+    Scrolls the page to trigger lazy-loaded job metadata.
+    """
+    for i in range(steps):
+        driver.execute_script(
+            "window.scrollTo(0, document.body.scrollHeight);"
+        )
+        time.sleep(pause)
+
+def extract_job_page_metadata(soup):
+    """
+    Extract location and department from a BambooHR job detail page.
+    """
+    location = None
+    department = None
+
+    # Location
+    loc_el = soup.find("div", string=lambda s: s and "Location" in s)
+    if loc_el:
+        val = loc_el.find_next("div")
+        if val:
+            location = val.get_text(" ", strip=True)
+
+    # Department
+    dept_el = soup.find("div", string=lambda s: s and "Department" in s)
+    if dept_el:
+        val = dept_el.find_next("div")
+        if val:
+            department = val.get_text(" ", strip=True)
+
+    return location, department
+
+def parse_career_lines(raw_text: str):
+    jobs = []
+
+    for line in raw_text.splitlines():
+        line = line.strip()
+        if not line or line.startswith("SOURCE") or line.startswith("SCRAPED_AT"):
+            continue
+
+        title = line
+        location = None
+        department = None
+
+        if " - " in line:
+            title, rest = line.split(" - ", 1)
+
+            if "(" in rest and rest.endswith(")"):
+                location, dept = rest.rsplit("(", 1)
+                location = location.strip()
+                department = dept.rstrip(")").strip()
+            else:
+                location = rest.strip()
+
+        jobs.append({
+            "title": title.strip(),
+            "location": location,
+            "department": department
+        })
+
+    return jobs
 
 @tool
 def scrape_careers_tool() -> str:
     """
-    Scrapes LMKR careers AND individual job descriptions.
+    Scrapes LMKR job openings from BambooHR using ONE Selenium session.
+    Titles are authoritative; metadata is best-effort and non-blocking.
     """
-    print("Crawling BambooHR careers site...")
+    from selenium import webdriver
+    from selenium.webdriver.edge.options import Options
+    from selenium.webdriver.edge.service import Service
+    from selenium.webdriver.common.by import By
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.support import expected_conditions as EC
+    from bs4 import BeautifulSoup
+    import time
 
-    listing_html = fetch_and_clean_body(config.careers_url)
-    job_links = extract_bamboohr_job_links(listing_html)
+    print("🕷️ Selenium scraping LMKR BambooHR careers (single session)...")
 
-    print(f"Found {len(job_links)} job pages")
+    options = Options()
+    options.add_argument("--headless=new")
+    options.add_argument("--disable-gpu")
+    options.add_argument(f"--user-agent={config.web_user_agent}")
 
-    all_jobs_text = []
+    driver = webdriver.Edge(options=options, service=Service())
 
-    for url in job_links:
-        print(f"   ↳ Scraping job: {url}")
-        job_html = fetch_and_clean_body(url)
-        if job_html:
-            all_jobs_text.append(
-                f"SOURCE: {url}\n\n{job_html}"
+    try:
+        # 1️⃣ Load careers listing page
+        driver.get(config.careers_url)
+        # 🔹 Force scroll to hydrate BambooHR job cards
+        force_scroll(driver, steps=6, pause=1.0)
+
+
+        # ✅ Soft wait — NEVER crash
+        try:
+            WebDriverWait(driver, 15).until(
+                EC.presence_of_element_located(
+                    (By.CSS_SELECTOR, "a[href^='/careers/']")
+                )
             )
+        except Exception:
+            print("⚠️ Careers page slow to hydrate; continuing.")
 
-    payload = (
-        f"SOURCE: {config.careers_url}\n"
-        f"SCRAPED_AT: {datetime.now().isoformat()}\n\n"
-        + "\n\n---\n\n".join(all_jobs_text)
-    )
+        soup = BeautifulSoup(driver.page_source, "html.parser")
 
-    save_to_file(payload, config.careers_output_file)
-    return payload
+        # 🔹 Best-effort metadata
+        listing_metadata = extract_listing_metadata(soup)
+        if not listing_metadata:
+            print("ℹ️ No listing metadata found (safe fallback).")
+
+        # 🔹 AUTHORITATIVE job links
+        job_links = set()
+        for a in soup.select("a[href^='/careers/']"):
+            href = a.get("href")
+            if href and href.split("/")[-1].isdigit():
+                job_links.add("https://lmkr.bamboohr.com" + href)
+
+        print(f"✅ Found {len(job_links)} job pages")
+
+        jobs = []
+
+        # 2️⃣ Visit each job page
+        for url in job_links:
+            print(f"   ↳ Scraping {url}")
+            driver.get(url)
+            time.sleep(3)
+
+            job_soup = BeautifulSoup(driver.page_source, "html.parser")
+
+            title_tag = job_soup.select_one("h1")
+            if title_tag:
+                title_text = title_tag.get_text(strip=True)
+            else:
+                meta = job_soup.find("meta", {"property": "og:title"})
+                if meta and meta.get("content"):
+                    title_text = meta["content"]
+                else:
+                    continue
+
+            location, department = extract_job_page_metadata(job_soup)
+
+
+            suffix = ""
+            if location and department:
+                suffix = f" - {location} ({department})"
+            elif location:
+                suffix = f" - {location}"
+            elif department:
+                suffix = f" - {department}"
+
+            jobs.append(title_text + suffix)
+
+        payload = (
+            f"SOURCE: {config.careers_url}\n"
+            f"SCRAPED_AT: {datetime.now().isoformat()}\n\n"
+            + "\n".join(dict.fromkeys(jobs))
+        )
+
+        save_to_file(payload, config.careers_output_file)
+        return payload
+
+    finally:
+        driver.quit()
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+def is_list_jobs_query(question: str) -> bool:
+    q = question.lower()
+    return any(phrase in q for phrase in [
+        "what jobs are available",
+        "list jobs",
+        "job openings",
+        "open positions",
+        "current openings",
+        "available positions",
+        "careers"
+    ])
+
+
+
 
 
 
@@ -688,12 +976,13 @@ Return JSON strictly matching the schema. No explanation.
 
 def static_retrieve_node(state: AgentState):
     print("\nNode: Static Retrieve...")
+
     question = state["question"]
 
     # --------------------------------------------------
-    # SAFE QUERY AUGMENTATION (NO UNBOUND VARIABLES)
+    # 1️⃣ SAFE QUERY AUGMENTATION
     # --------------------------------------------------
-    queries = [question]  # ALWAYS defined
+    queries = [question]
 
     if len(question.split()) >= 6:
         aug_prompt = (
@@ -707,41 +996,82 @@ def static_retrieve_node(state: AgentState):
             queries.extend(structured_aug.augmented_queries)
 
     # --------------------------------------------------
-    # VECTOR SEARCH (EMBED ONCE PER QUERY VARIANT)
+    # 2️⃣ VECTOR SEARCH (ROBUST)
     # --------------------------------------------------
     all_docs = []
 
     for q in queries:
-        query_embedding = embed_once(q)
-        if query_embedding is None:
-            continue
+        try:
+            query_embedding = embed_once(q)
+            if query_embedding is None:
+                continue
 
-        docs = vectorstore.similarity_search_by_vector(
-            query_embedding,
-            k=config.static_k
-        )
+            docs = vectorstore.similarity_search_by_vector(
+                query_embedding,
+                k=config.static_k
+            )
 
-        
+            for d in docs:
+                if not d or not d.page_content:
+                    continue
 
-        for d in docs:
-            all_docs.append({
-                "content": d.page_content,
-                "metadata": {
-                    "source": d.metadata.get("source", "unknown.txt"),
-                    "path": d.metadata.get("path", ""),
-                    "type": "static_txt"
-                }
-            })
+                all_docs.append({
+                    "content": d.page_content,
+                    "metadata": {
+                        "source": (
+                            d.metadata.get("source")
+                            or d.metadata.get("path")
+                            or "static_knowledge_base"
+                        ),
+                        "path": d.metadata.get("path"),
+                        "type": "static_txt"
+                    }
+                })
+
+        except Exception as e:
+            print(f"⚠️ Static retrieval failed for query '{q}': {e}")
 
     # --------------------------------------------------
-    # DEDUP + TOP-K
+    # 3️⃣ GUARANTEED FALLBACK (CRITICAL)
+    # --------------------------------------------------
+    if not all_docs:
+        print("⚠️ No static hits found — using fallback retrieval")
+
+        try:
+            fallback_docs = vectorstore.similarity_search(
+                question,
+                k=config.static_k
+            )
+
+            for d in fallback_docs:
+                if not d or not d.page_content:
+                    continue
+
+                all_docs.append({
+                    "content": d.page_content,
+                    "metadata": {
+                        "source": (
+                            d.metadata.get("source")
+                            or d.metadata.get("path")
+                            or "static_knowledge_base"
+                        ),
+                        "path": d.metadata.get("path"),
+                        "type": "static_txt"
+                    }
+                })
+
+        except Exception as e:
+            print(f"❌ Static fallback retrieval failed: {e}")
+
+    # --------------------------------------------------
+    # 4️⃣ DEDUPLICATION
     # --------------------------------------------------
     seen = set()
     unique_context = []
 
     for doc in all_docs:
-        content = doc.get("content")
-        if not content or content in seen:
+        content = doc["content"]
+        if content in seen:
             continue
         seen.add(content)
         unique_context.append(doc)
@@ -749,14 +1079,22 @@ def static_retrieve_node(state: AgentState):
     unique_context = unique_context[:config.static_k]
 
     # --------------------------------------------------
-    # DEBUG SAVE (OPTIONAL)
+    # 5️⃣ DEBUG OUTPUT (OPTIONAL)
     # --------------------------------------------------
-    save_to_file(
-        "\n---\n".join(d["content"] for d in unique_context),
-        config.static_output
-    )
+    if unique_context:
+        save_to_file(
+            "\n---\n".join(d["content"] for d in unique_context),
+            config.static_output
+        )
 
-    return {"context_chunks": unique_context}
+    # --------------------------------------------------
+    # 6️⃣ LANGGRAPH-SAFE STATE RETURN
+    # --------------------------------------------------
+    return {
+        **state,
+        "context_chunks": unique_context
+    }
+
 
 
 
@@ -765,42 +1103,123 @@ def career_retrieve_node(state: AgentState):
     print("\nNode: Career Retrieve...")
     question = state["question"]
 
+    # --------------------------------------------------
+    # Load cache OR scrape
+    # --------------------------------------------------
     if is_file_fresh(config.careers_output_file, SCRAPE_FRESH_HOURS):
-
         raw_text = load_from_file(config.careers_output_file)
     else:
         raw_text = scrape_careers_tool.invoke({})
 
-
     if not raw_text:
-        return {"context_chunks": []}
+        return {
+            "generated_answer": GeneratedAnswer(
+                answer="No job openings found.",
+                sources_used=[config.careers_url]
+            ),
+            "__end__": True
+        }
 
-    chunks = split_text_into_chunks(raw_text)
+    # --------------------------------------------------
+    # ⚡ FAST-PATH: LIST ALL JOBS (NO LLM)
+    # --------------------------------------------------
+    if is_list_jobs_query(question):
+        print("⚡ Fast-path: listing jobs directly (NO LLM)")
 
-    career_vs = load_or_build_faiss(
-    config.career_faiss_path,
-    chunks,
-    embeddings
-)
+        jobs = []
+        for line in raw_text.splitlines():
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith("SOURCE") or line.startswith("SCRAPED_AT"):
+                continue
+            jobs.append(line)
 
-    retrieved_docs = career_vs.similarity_search(
-        question,
-        k=config.careers_k
-    )
+        jobs = list(dict.fromkeys(jobs))  # dedupe
 
-    return {
-        "context_chunks": [
-            {
-                "content": d.page_content,
-                "metadata": {
-                    "source_url": config.careers_url,
-                    "source_file": config.careers_output_file,
-                    "source_type": "career_scrape"
-                }
+        answer_text = (
+            "\n".join(jobs)
+            if jobs
+            else "No job openings found."
+        )
+
+        return {
+            "generated_answer": GeneratedAnswer(
+                answer=answer_text,
+                sources_used=[config.careers_url]
+            ),
+            "destination": "__end__"
+        }
+
+    # --------------------------------------------------
+    # 🔍 STRUCTURED CONTEXT FOR FILTERED / SEMANTIC QUERIES
+    # --------------------------------------------------
+    def parse_career_lines(raw_text: str):
+        parsed = []
+
+        for line in raw_text.splitlines():
+            line = line.strip()
+            if not line or line.startswith("SOURCE") or line.startswith("SCRAPED_AT"):
+                continue
+
+            title = line
+            location = None
+            department = None
+
+            if " - " in line:
+                title, rest = line.split(" - ", 1)
+
+                if "(" in rest and rest.endswith(")"):
+                    loc, dept = rest.rsplit("(", 1)
+                    location = loc.strip()
+                    department = dept.rstrip(")").strip()
+                else:
+                    location = rest.strip()
+
+            parsed.append({
+                "title": title.strip(),
+                "location": location,
+                "department": department
+            })
+
+        return parsed
+
+    jobs = parse_career_lines(raw_text)
+
+    context_chunks = []
+    for job in jobs:
+        context_chunks.append({
+            "content": (
+                f"Job Title: {job['title']}\n"
+                f"Location: {job['location'] or 'Not specified'}\n"
+                f"Department: {job['department'] or 'Not specified'}"
+            ),
+            "metadata": {
+                "source_url": config.careers_url,
+                "source_type": "career_scrape"
             }
-            for d in retrieved_docs
-        ]
+        })
+
+    if not context_chunks:
+        return {
+            "generated_answer": GeneratedAnswer(
+                answer="No job openings found.",
+                sources_used=[config.careers_url]
+            ),
+            "__end__": True
+        }
+
+    # --------------------------------------------------
+    # 🚀 LET THE GENERATOR REASON & FILTER
+    # --------------------------------------------------
+    return {
+        "context_chunks": context_chunks
     }
+
+
+
+
+
 
 
 
@@ -848,67 +1267,36 @@ def announcements_retrieve_node(state: AgentState):
     }
 
 
-def is_small_talk(question: str) -> bool:
-    q = question.lower().strip()
-
-    small_talk_phrases = [
-        "hi", "hello", "hey",
-        "how are you",
-        "how's it going",
-        "good morning",
-        "good afternoon",
-        "good evening",
-        "thank you",
-        "thanks",
-        "bye",
-        "goodbye"
-    ]
-
-    # exact or starts-with match (prevents false positives)
-    return any(
-        q == p or q.startswith(p + " ")
-        for p in small_talk_phrases
-    )
-
 
 def direct_node(state: AgentState):
-    print("\nNode: Direct...")
+    print("\nNode: Direct (LLM)...")
 
     question = state["question"]
 
-    # ✅ Allow greetings / small talk
-    if is_small_talk(question):
-        response = Structured_output(
-            f"""
+    prompt = f"""
 User Input: {question}
-You are a polite corporate assistant for LMKR.
-Respond briefly and naturally.
-Return plain text only.
-""",
-            GeneratedAnswer
-        )
+Instructions:
+1. You are a helpful corporate assistant for LMKR.
+2. Respond naturally to the greeting or conversational question.
+3. Do NOT make up technical facts. Just be polite.
+4. Return your answer as PLAIN TEXT ONLY. Do NOT use markdown formatting (no ###, **, *, -, lists, code blocks, etc.). Use simple, readable text.
+Return a short helpful reply.
+"""
 
-        if not response:
-            response = GeneratedAnswer(answer="Hello! How can I help you with LMKR today?", sources_used=[])
+    response = Structured_output(prompt, GeneratedAnswer)
 
-        return {
-            **state,
-            "generated_answer": response,
-            "context_chunks": [],
-            "destination": "direct_node",
-        }
+    if not response:
+        response = GeneratedAnswer(answer="Hello! How can I help?", sources_used=["Direct"])
+    else:
+        response.sources_used = ["Direct"]
 
-    # ❌ Block general knowledge / definitions
+    # ✅ pass-through state
     return {
         **state,
-        "generated_answer": GeneratedAnswer(
-            answer="Sorry, I can only help with questions about LMKR, its products, and its services.",
-            sources_used=[]
-        ),
+        "generated_answer": response,
         "context_chunks": [],
         "destination": "direct_node",
     }
-
 
 
 
@@ -932,31 +1320,48 @@ def _extract_links_from_context(chunks: List[str]) -> List[str]:
 def static_generate_node(state: AgentState):
     print("\nNode: Static Generate...")
 
-    # ----- structured context -----
+    context_chunks = state.get("context_chunks", [])
+
+    # --------------------------------------------------
+    # NO CONTEXT → CLEAN REFUSAL
+    # --------------------------------------------------
+    if not context_chunks:
+        response = GeneratedAnswer(
+            answer="I do not have enough information.",
+            sources_used=[]
+        )
+        append_conversation(state["question"], response.answer)
+        return {"generated_answer": response}
+
+    # --------------------------------------------------
+    # CONTEXT FOR PROMPT (TRIMMED)
+    # --------------------------------------------------
     safe_chunks = trim_context_preserve_accuracy(
-    state.get("context_chunks", []),
-    max_chars=4000
-)
+        context_chunks,
+        max_chars=4000
+    )
 
     context_data = "\n---\n".join(c["content"] for c in safe_chunks)
 
-
+    # --------------------------------------------------
+    # MEMORY (PARALLEL)
+    # --------------------------------------------------
     episodic_future = MEMORY_EXECUTOR.submit(
-    recall_episodes,
-    state["thread_id"],
-    state["question"],
-    2
-)
-
+        recall_episodes,
+        state["thread_id"],
+        state["question"],
+        2
+    )
     conversation_future = MEMORY_EXECUTOR.submit(load_conversation_memory)
 
     episodic_history = episodic_future.result()
     conversation = conversation_future.result()
 
-
-
     today = datetime.now().strftime("%B %d, %Y")
 
+    # --------------------------------------------------
+    # PROMPT
+    # --------------------------------------------------
     prompt = f"""
 You are an expert assistant for LMKR.
 
@@ -973,41 +1378,55 @@ Current Date: {today}
 User Question: {state['question']}
 
 Rules:
-1. You MUST answer ONLY using the provided Context Data.
-2. You are FORBIDDEN from using general knowledge.
-3. If the answer is not explicitly stated in the Context Data,
-   respond exactly with:
-   "Sorry, I do not have enough information. Feel free to ask me more about LMKR!"
-
-4. If the Context Data partially answers the question, provide a concise, factual answer based on it.
-5. Only say "Sorry, I do not have enough information. Feel free to ask me more about LMKR!" if the Context Data is empty or completely irrelevant.
-6. Do NOT invent facts, numbers, dates, or claims not supported by the context.
-7. Return your answer as PLAIN TEXT ONLY. Do NOT use markdown formatting.
-
+1. Use the Context Data as the primary source of truth.
+2. If the Context Data answers the question, provide a concise factual answer.
+3. If the Context Data partially answers the question, provide the best factual answer using ONLY the given context. Only refuse if the topic is completely absent.
+4. Do NOT invent facts, numbers, dates, or claims.
+5. Return your answer as PLAIN TEXT ONLY.
 
 Return JSON strictly following the schema.
 """
 
     response = Structured_output(prompt, GeneratedAnswer)
 
-    if response is None:
+    if response is None or not response.answer:
         response = GeneratedAnswer(
-            answer="Sorry, I do not have enough information. Feel free to ask me more about LMKR!",
+            answer="I do not have enough information.",
             sources_used=[]
         )
 
-    # collect sources from metadata
-    sources = []
-    for c in state.get("context_chunks", []):
-        if "source" in c.get("metadata", {}):
-            sources.append(c["metadata"]["source"])
+    # --------------------------------------------------
+    # SOURCE ASSIGNMENT (CORRECT & TRUSTWORTHY)
+    # --------------------------------------------------
+    no_answer_phrases = [
+        "i do not have enough information",
+        "not enough information",
+        "cannot find",
+        "information is not available"
+    ]
 
-    response.sources_used = list(dict.fromkeys(sources))
+    answer_lower = response.answer.lower().strip()
 
-    # ----- persist memories -----
+    if any(p in answer_lower for p in no_answer_phrases):
+        response.sources_used = []
+    else:
+        # 🔑 Attribute from ORIGINAL retrieved chunks, not trimmed ones
+        sources = []
+        for c in context_chunks:
+            src = c.get("metadata", {}).get("source")
+            if src:
+                sources.append(src)
+
+        response.sources_used = list(dict.fromkeys(sources))
+
+    # --------------------------------------------------
+    # PERSIST MEMORY
+    # --------------------------------------------------
     append_conversation(state["question"], response.answer)
 
     return {"generated_answer": response}
+
+
 
 
 def build_dynamic_sources(context_chunks):
@@ -1030,6 +1449,10 @@ def build_dynamic_sources(context_chunks):
 
 def dynamic_generate_node(state: AgentState):
     print("\nNode: Dynamic Generate...")
+
+    if not state.get("context_chunks"):
+        return state
+
 
     # --------------------------------------------------
     # CONTEXT (trimmed for safety + speed)
@@ -1150,7 +1573,7 @@ Return JSON strictly following the schema.
 
     if response is None:
         response = GeneratedAnswer(
-            answer="Sorry, I do not have enough information. Feel free to ask me more about LMKR!",
+            answer="I do not have enough information.",
             sources_used=[]
         )
 
@@ -1234,6 +1657,7 @@ workflow.add_conditional_edges(
 workflow.add_edge("static_retrieve_node", "static_generate_node")
 workflow.add_edge("career_retrieve_node", "dynamic_generate_node")
 workflow.add_edge("announcements_retrieve_node", "dynamic_generate_node")
+
 
 # generators -> safety -> groundness
 workflow.add_edge("static_generate_node", "output_guard_node")
