@@ -204,8 +204,8 @@ def is_file_fresh(path: str, hours: int) -> bool:
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 text_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=600,
-    chunk_overlap=120
+    chunk_size=800,
+    chunk_overlap=150
 )
 
 def split_text_into_chunks(text: str) -> List[str]:
@@ -243,13 +243,15 @@ memory_store = InMemoryStore(
 
 
 # =========================================================
-# VECTORSTORE BOOTSTRAP (PERSISTENT FAISS)
+# VECTORSTORE BOOTSTRAP (PERSISTENT FAISS) — FIXED
 # =========================================================
 
 vectorstore = None
 documents = []
 
-# 1️⃣ Try loading existing FAISS
+# ---------------------------------------------------------
+# 1️⃣ Try loading existing FAISS (dimension-safe)
+# ---------------------------------------------------------
 if os.path.exists(config.faiss_path):
     try:
         vectorstore = LC_FAISS.load_local(
@@ -257,17 +259,35 @@ if os.path.exists(config.faiss_path):
             embeddings,
             allow_dangerous_deserialization=True
         )
-        print("FAISS index loaded from disk.")
+
+        # 🔍 Dimension sanity check (CRITICAL)
+        test_vec = embeddings.embed_query("dimension check")
+        faiss_dim = vectorstore.index.d
+        embed_dim = len(test_vec)
+
+        if faiss_dim != embed_dim:
+            print(
+                f"⚠️ FAISS dim mismatch (faiss={faiss_dim}, embed={embed_dim}) "
+                "→ forcing rebuild"
+            )
+            vectorstore = None
+        else:
+            print("✅ FAISS index loaded successfully.")
+
     except Exception as e:
-        print(f"Failed to load FAISS index: {e}")
+        print(f"⚠️ Failed to load FAISS index: {e}")
+        vectorstore = None
 
-# 2️⃣ If not found or failed → build & persist
+
+# ---------------------------------------------------------
+# 2️⃣ Build FAISS if missing or invalid
+# ---------------------------------------------------------
 if vectorstore is None:
-    print("No FAISS index found. Creating a new one...")
+    print("🔄 Building FAISS index from static documents...")
 
-    documents = []  # ✅ re-initialize safely
-
-    # 🔹 Ingest real documents
+    # -----------------------------------------------------
+    # Load raw static documents
+    # -----------------------------------------------------
     if os.path.exists(config.data_path):
         for fname in os.listdir(config.data_path):
             if fname.lower().endswith(".txt"):
@@ -275,18 +295,21 @@ if vectorstore is None:
                 with open(full_path, encoding="utf-8", errors="ignore") as f:
                     content = f.read()
 
-                documents.append(
-                    Document(
-                        page_content=content,
-                        metadata={
-                            "source": fname,              # filename
-                            "path": full_path,
-                            "source_type": "static_txt"
-                        }
+                if content.strip():
+                    documents.append(
+                        Document(
+                            page_content=content,
+                            metadata={
+                                "source": fname,
+                                "path": full_path,
+                                "source_type": "static_txt"
+                            }
+                        )
                     )
-                )
 
-    # 🔹 Absolute fallback (never empty)
+    # -----------------------------------------------------
+    # Absolute fallback (never allow empty FAISS)
+    # -----------------------------------------------------
     if not documents:
         documents.append(
             Document(
@@ -298,10 +321,34 @@ if vectorstore is None:
             )
         )
 
-    # 🔹 Build + persist FAISS
-    vectorstore = LC_FAISS.from_documents(documents, embeddings)
+    # -----------------------------------------------------
+    # 🔹 CHUNK DOCUMENTS BEFORE EMBEDDING (CRITICAL FIX)
+    # -----------------------------------------------------
+    chunked_documents = []
+
+    for doc in documents:
+        chunks = split_text_into_chunks(doc.page_content)
+        for idx, chunk in enumerate(chunks):
+            chunked_documents.append(
+                Document(
+                    page_content=chunk,
+                    metadata={
+                        **doc.metadata,
+                        "chunk_id": idx
+                    }
+                )
+            )
+
+    print(f"📄 Loaded {len(documents)} files → {len(chunked_documents)} chunks")
+
+    # -----------------------------------------------------
+    # Build & persist FAISS
+    # -----------------------------------------------------
+    vectorstore = LC_FAISS.from_documents(chunked_documents, embeddings)
     vectorstore.save_local(config.faiss_path)
-    print("FAISS index created and saved to disk.")
+
+    print("✅ FAISS index built and saved to disk.")
+
 
 
 
@@ -929,10 +976,11 @@ Return JSON strictly matching the schema. No explanation.
 
 def static_retrieve_node(state: AgentState):
     print("\nNode: Static Retrieve...")
+
     question = state["question"]
 
     # --------------------------------------------------
-    # SAFE QUERY AUGMENTATION
+    # 1️⃣ SAFE QUERY AUGMENTATION
     # --------------------------------------------------
     queries = [question]
 
@@ -948,35 +996,75 @@ def static_retrieve_node(state: AgentState):
             queries.extend(structured_aug.augmented_queries)
 
     # --------------------------------------------------
-    # VECTOR SEARCH
+    # 2️⃣ VECTOR SEARCH (ROBUST)
     # --------------------------------------------------
     all_docs = []
 
     for q in queries:
-        query_embedding = embed_once(q)
-        if query_embedding is None:
-            continue
-
-        docs = vectorstore.similarity_search_by_vector(
-            query_embedding,
-            k=config.static_k
-        )
-
-        for d in docs:
-            if not d.page_content:
+        try:
+            query_embedding = embed_once(q)
+            if query_embedding is None:
                 continue
 
-            all_docs.append({
-                "content": d.page_content,
-                "metadata": {
-                    "source": d.metadata.get("source"),
-                    "path": d.metadata.get("path"),
-                    "type": "static_txt"
-                }
-            })
+            docs = vectorstore.similarity_search_by_vector(
+                query_embedding,
+                k=config.static_k
+            )
+
+            for d in docs:
+                if not d or not d.page_content:
+                    continue
+
+                all_docs.append({
+                    "content": d.page_content,
+                    "metadata": {
+                        "source": (
+                            d.metadata.get("source")
+                            or d.metadata.get("path")
+                            or "static_knowledge_base"
+                        ),
+                        "path": d.metadata.get("path"),
+                        "type": "static_txt"
+                    }
+                })
+
+        except Exception as e:
+            print(f"⚠️ Static retrieval failed for query '{q}': {e}")
 
     # --------------------------------------------------
-    # DEDUPLICATION
+    # 3️⃣ GUARANTEED FALLBACK (CRITICAL)
+    # --------------------------------------------------
+    if not all_docs:
+        print("⚠️ No static hits found — using fallback retrieval")
+
+        try:
+            fallback_docs = vectorstore.similarity_search(
+                question,
+                k=config.static_k
+            )
+
+            for d in fallback_docs:
+                if not d or not d.page_content:
+                    continue
+
+                all_docs.append({
+                    "content": d.page_content,
+                    "metadata": {
+                        "source": (
+                            d.metadata.get("source")
+                            or d.metadata.get("path")
+                            or "static_knowledge_base"
+                        ),
+                        "path": d.metadata.get("path"),
+                        "type": "static_txt"
+                    }
+                })
+
+        except Exception as e:
+            print(f"❌ Static fallback retrieval failed: {e}")
+
+    # --------------------------------------------------
+    # 4️⃣ DEDUPLICATION
     # --------------------------------------------------
     seen = set()
     unique_context = []
@@ -991,23 +1079,21 @@ def static_retrieve_node(state: AgentState):
     unique_context = unique_context[:config.static_k]
 
     # --------------------------------------------------
-    # SAFETY: NO CONTEXT → NO SOURCES LATER
+    # 5️⃣ DEBUG OUTPUT (OPTIONAL)
     # --------------------------------------------------
-    if not unique_context:
-        return {
+    if unique_context:
+        save_to_file(
+            "\n---\n".join(d["content"] for d in unique_context),
+            config.static_output
+        )
+
+    # --------------------------------------------------
+    # 6️⃣ LANGGRAPH-SAFE STATE RETURN
+    # --------------------------------------------------
+    return {
         **state,
-        "context_chunks": []
+        "context_chunks": unique_context
     }
-
-    # --------------------------------------------------
-    # DEBUG (OPTIONAL)
-    # --------------------------------------------------
-    save_to_file(
-        "\n---\n".join(d["content"] for d in unique_context),
-        config.static_output
-    )
-
-    return {"context_chunks": unique_context}
 
 
 
@@ -1294,7 +1380,7 @@ User Question: {state['question']}
 Rules:
 1. Use the Context Data as the primary source of truth.
 2. If the Context Data answers the question, provide a concise factual answer.
-3. Only say "I do not have enough information" if the Context Data does NOT contain the answer.
+3. If the Context Data partially answers the question, provide the best factual answer using ONLY the given context. Only refuse if the topic is completely absent.
 4. Do NOT invent facts, numbers, dates, or claims.
 5. Return your answer as PLAIN TEXT ONLY.
 
