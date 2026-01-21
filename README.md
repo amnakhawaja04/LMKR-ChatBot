@@ -89,10 +89,13 @@ Create a .env file:
 `OPENAI_API_KEY=your_openai_key_here`
 
 `LLM_MODEL=gpt-4o-mini`
+
 `LLM_MAX_TOKENS=800`
+
 `LLM_TEMPERATURE=0.2`
 
 `EMBEDDINGS_MODEL=text-embedding-3-small`
+
 `EMBEDDING_DIMENSION=1536`
 
 `faiss_path=path/to/faiss_data
@@ -117,16 +120,27 @@ OR
 Tested and working Queries:
 
 'What is LMKT?'
+
 'What job is available in Lahore?'
+
 'What vacancies are open for Business?'
+
 'What vacancies are open for finance?'
+
 'What is GVERSE and TRVERSE?'
+
 'Who is the CEO and when was the company founded?'
+
 'Does lmkr operate in Malaysia and Japan?'
+
 'How many employees are working at lmkr?'
+
 'Where is it located in islamabad?'
+
 'I want to apply at lmkr'
+
 'What is latest news at lmkr?'
+
 'My number is 3433430922, can you contact me?' (this query wouldnt work because of the DetectPII guardrail)
 
 ## Memory Behaviour 
